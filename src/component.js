@@ -3,7 +3,7 @@ var myModule = angular.module('my-module', []);
 
 myModule.directive('myDirective', [function() {
     return {
-        template: '<div>My Directive</div>',
+        template: '<div class="my-directive">My Directive</div>',
         link: function(scope) {
             scope.foo = 'bar';
         }

@@ -43,6 +43,14 @@ module.exports = function(grunt) {
             }
         },
 
+        less: {
+            unmin: {
+                files: {
+                    'dist/component.css': 'src/component.less'
+                }
+            }
+        },
+
         uglify: {
             component: {
                 files: {
@@ -85,6 +93,7 @@ module.exports = function(grunt) {
     grunt.registerTask('package', [
         'clean',
         'copy',
+        'less',
         'uglify'
     ]);
 
