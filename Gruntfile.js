@@ -38,23 +38,23 @@ module.exports = function(grunt) {
 
         copy: {
             unmin: {
-                src: 'src/component.js',
-                dest: 'dist/component.js'
+                src: 'src/scroll-repeat.js',
+                dest: 'dist/scroll-repeat.js'
             }
         },
 
         less: {
             unmin: {
                 files: {
-                    'dist/component.css': 'src/component.less'
+                    'dist/scroll-repeat.css': 'src/scroll-repeat.less'
                 }
             }
         },
 
         uglify: {
-            component: {
+            min: {
                 files: {
-                    'dist/component.min.js': ['src/component.js']
+                    'dist/scroll-repeat.min.js': ['src/scroll-repeat.js']
                 }
             }
         },

@@ -3,13 +3,19 @@
   <script src="//localhost:35729/livereload.js"></script>
 
   <link href="../dist/component.css" rel="stylesheet"></link>
+  <link href="../dist/scroll-repeat.css" rel="stylesheet"></link>
 
   <script src="../bower_components/angular/angular.js"></script>
-  <script src="../dist/component.js"></script>
+  <script src="../dist/scroll-repeat.js"></script>
+  <script src="demo.js"></script>
 </head>
-<body ng-app="my-module">
+<body ng-app="demoApp">
 
-  <div my-directive></div>
+  <div ng-controller="DemoCtrl as ctrl">
+    <div scroll-repeat="thing in ctrl.stuff" class="things">
+      <div>{{thing.name}}</div>
+    </div>
+  </div>
 
 </body>
 </html>
