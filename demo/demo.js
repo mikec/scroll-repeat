@@ -2,14 +2,14 @@
 angular.module('demoApp', ['litl'])
 .controller('DemoCtrl', function() {
 
-    this.stuff = generateArray(100);
+    this.things = generateArray(10000);
 
 });
 
 function generateArray(len) {
     var arr = [];
     for(var i=0; i < len; i++) {
-        arr.push({ name: 'thing ' + i });
+        arr.push({ number: (i+1) });
     }
     return arr;
 }

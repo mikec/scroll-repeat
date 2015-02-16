@@ -7,13 +7,17 @@
 
   <script src="../bower_components/angular/angular.js"></script>
   <script src="../dist/scroll-repeat.js"></script>
+
+
+  <link href="demo.css" rel="stylesheet"></link>
   <script src="demo.js"></script>
+
 </head>
 <body ng-app="demoApp">
 
   <div ng-controller="DemoCtrl as ctrl">
-    <div scroll-repeat="thing in ctrl.stuff" class="things">
-      <div>{{thing.name}}</div>
+    <div scroll-repeat="t in ctrl.things" class="things">
+      <div>{{t.number}}</div>
     </div>
   </div>
 
