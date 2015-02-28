@@ -18,10 +18,11 @@ module.exports = function(grunt) {
             options: {
                 browser: true,
                 maxlen: 120,
-                unused: true,
+                unused: false,
                 undef: true,
                 globals: {
-                    angular: false
+                    angular: false,
+                    console: false
                 }
             },
             src: {
