@@ -8,7 +8,8 @@
 angular.module('litl', []).directive('scrollRepeat', ['$window', '$timeout',
 function($window, $timeout) {
 
-    var numRenderedItems = 150;
+    var bufferAmt = 30;
+    var numRenderedItems = 1;
     var numBufferItems;
 
     var w = angular.element($window);
@@ -18,9 +19,9 @@ function($window, $timeout) {
     var resizeDebounceTime = 500;
     var resizeHandler;
 
-    var wScrollTop;
+    var wScrollTop = 0;
     var scrollDebounce;
-    var scrollDebounceTime = 500;
+    var scrollDebounceTime = 250;
     var scrollHandler;
 
     updateWindowSizes();
@@ -71,7 +72,7 @@ function($window, $timeout) {
             var match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/); // jshint ignore:line
             var rhs = match[2];
 
-            item.attr('ng-repeat', expression + ' | limitTo:lim | limitTo: -' + numRenderedItems);
+            item.attr('ng-repeat', expression + ' | limitTo:lim | limitTo:n');
 
             return function(scope, element) {
 
@@ -91,7 +92,7 @@ function($window, $timeout) {
                     }
                     if(firstLoad) {
                         updateItemHeight();
-                        updateNumBufferedItems();
+                        updateBufferVals();
                         firstLoad = false;
                     }
                     updateUI();
@@ -105,12 +106,13 @@ function($window, $timeout) {
                 };
 
                 resizeHandler = function() {
-                    updateNumBufferedItems();
+                    updateBufferVals();
                 };
 
                 function setCursor(n) {
                     cursor = n;
                     scope.lim = numRenderedItems + n;
+                    scope.n = numRenderedItems * -1;
                     updateUI();
                 }
 
@@ -134,13 +136,15 @@ function($window, $timeout) {
                     element.css('padding-bottom', getBottomSpacerHeight() + 'px');
                 }
 
-                function updateNumBufferedItems() {
+                function updateBufferVals() {
                     var numItemsOnScreen = Math.round(wHeight / itemHeight);
+                    numRenderedItems = numItemsOnScreen + (numItemsOnScreen * bufferAmt);
                     numBufferItems = Math.round((numRenderedItems - numItemsOnScreen) / 2);
+                    updateCursor();
                 }
 
                 function updateItemHeight() {
-                    itemHeight = element.children()[1].offsetHeight;
+                    itemHeight = element.children()[0].offsetHeight;
                 }
 
                 function getTopSpacerHeight() {
