@@ -5,11 +5,54 @@
  *
  */
 
-angular.module('litl', []).directive('scrollRepeat', [
-function() {
+angular.module('litl', []).directive('scrollRepeat', ['$window', '$timeout',
+function($window, $timeout) {
 
-    var idx = 0;
-    var numRenderedItems = 3;
+    var numRenderedItems = 500;
+    var numBufferItems;
+
+    var w = angular.element($window);
+
+    var wHeight, wWidth;
+    var resizeDebounce;
+    var resizeDebounceTime = 500;
+    var resizeHandler;
+
+    var wScrollTop;
+    var scrollDebounce;
+    var scrollDebounceTime = 500;
+    var scrollHandler;
+
+    updateWindowSizes();
+
+    w.bind('resize', function() {
+        if(angular.isUndefined(wHeight) ||
+            angular.isUndefined(wWidth) ||
+                angular.isUndefined(resizeDebounce))
+        {
+            updateWindowSizes();
+        }
+        $timeout.cancel(resizeDebounce);
+        resizeDebounce = $timeout(updateWindowSizes, resizeDebounceTime);
+    });
+
+    w.bind('scroll', function() {
+        wScrollTop = $window.document.body.scrollTop;
+        if(angular.isUndefined(scrollDebounce)) {
+            scrollDebounce = $timeout(function() {
+                if(scrollHandler) scrollHandler();
+                scrollDebounce = undefined;
+            }, scrollDebounceTime);
+        }
+        if(scrollHandler) scrollHandler(true);
+    });
+
+    function updateWindowSizes() {
+        wWidth = w.prop('innerWidth');
+        wHeight = w.prop('innerHeight');
+        resizeDebounce = undefined;
+        if(resizeHandler) resizeHandler();
+    }
 
     return {
         compile: function(tElement, tAttrs) {
@@ -31,13 +74,7 @@ function() {
 
             // copied from ngRepeat
             var match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/); // jshint ignore:line
-            var lhs = match[1];
             var rhs = match[2];
-
-            var itemsName = 'scroll_repeat_items_' + idx;
-            idx++;
-
-            //item.attr('ng-repeat', lhs + ' in ' + itemsName);
 
             item.attr('ng-repeat', expression + ' | limitTo:lim | limitTo: -' + numRenderedItems);
 
@@ -50,6 +87,7 @@ function() {
                 var itemHeight = 0;
                 var numItems = 0;
                 var firstLoad = true;
+
                 setCursor(0);
 
                 scope.$watchCollection(rhs, function(itemArray) {
@@ -58,10 +96,21 @@ function() {
                     }
                     if(firstLoad) {
                         updateItemHeight();
+                        updateNumBufferedItems();
                         firstLoad = false;
                     }
                     updateUI();
                 });
+
+                scrollHandler = function(bounced) {
+                    if(!bounced) {
+                        updateCursor();
+                    }
+                };
+
+                resizeHandler = function() {
+                    updateNumBufferedItems();
+                };
 
                 function setCursor(n) {
                     cursor = n;
@@ -69,9 +118,22 @@ function() {
                     updateUI();
                 }
 
+                function updateCursor() {
+                    var c = Math.round(wScrollTop / itemHeight) - numBufferItems;
+                    if(c < 0) c = 0;
+                    var maxC = numItems - numRenderedItems;
+                    if(c > maxC) c = maxC;
+                    setCursor(c);
+                }
+
                 function updateUI() {
                     topSpacer.css('height', getTopSpacerHeight() + 'px');
                     bottomSpacer.css('height', getBottomSpacerHeight() + 'px');
+                }
+
+                function updateNumBufferedItems() {
+                    var numItemsOnScreen = Math.round(wHeight / itemHeight);
+                    numBufferItems = Math.round((numRenderedItems - numItemsOnScreen) / 2);
                 }
 
                 function updateItemHeight() {
@@ -85,13 +147,6 @@ function() {
                 function getBottomSpacerHeight() {
                     return (numItems - numRenderedItems - cursor) * itemHeight;
                 }
-
-                // DEBUGGING
-                element.bind('click', function() {
-                    scope.$apply(function() {
-                        setCursor(cursor + 1);
-                    });
-                });
 
             };
         }
