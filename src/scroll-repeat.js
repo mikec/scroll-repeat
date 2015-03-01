@@ -8,7 +8,7 @@
 angular.module('litl', []).directive('scrollRepeat', ['$window', '$timeout',
 function($window, $timeout) {
 
-    var numRenderedItems = 500;
+    var numRenderedItems = 50;
     var numBufferItems;
 
     var w = angular.element($window);
@@ -65,9 +65,7 @@ function($window, $timeout) {
             item.append(content);
 
             tElement.html('');
-            tElement.append('<div style="background:red"></div>');
             tElement.append(item);
-            tElement.append('<div style="background:blue"></div>');
 
             // copied from ngRepeat
             var match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/); // jshint ignore:line
@@ -76,9 +74,6 @@ function($window, $timeout) {
             item.attr('ng-repeat', expression + ' | limitTo:lim | limitTo: -' + numRenderedItems);
 
             return function(scope, element) {
-
-                var topSpacer = angular.element(element.children()[0]);
-                var bottomSpacer = angular.element(element.children()[1]);
 
                 var cursor = 0;
                 var itemHeight = 0;
@@ -124,8 +119,8 @@ function($window, $timeout) {
                 }
 
                 function updateUI() {
-                    topSpacer.css('height', getTopSpacerHeight() + 'px');
-                    bottomSpacer.css('height', getBottomSpacerHeight() + 'px');
+                    element.css('padding-top', getTopSpacerHeight() + 'px');
+                    element.css('padding-bottom', getBottomSpacerHeight() + 'px');
                 }
 
                 function updateNumBufferedItems() {
