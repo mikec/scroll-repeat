@@ -72,7 +72,7 @@ function($window, $timeout) {
             var match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/); // jshint ignore:line
             var rhs = match[2];
 
-            item.attr('ng-repeat', expression + ' | limitTo:lim | limitTo:n');
+            item.attr('ng-repeat', expression + ' | limitTo:ofs | limitTo:lim');
 
             return function(scope, element) {
 
@@ -111,8 +111,8 @@ function($window, $timeout) {
 
                 function setCursor(n) {
                     cursor = n;
-                    scope.lim = numRenderedItems + n;
-                    scope.n = numRenderedItems * -1;
+                    scope.ofs = numRenderedItems + n;
+                    scope.lim = numRenderedItems * -1;
                     updateUI();
                 }
 
