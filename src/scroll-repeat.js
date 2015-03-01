@@ -8,7 +8,7 @@
 angular.module('litl', []).directive('scrollRepeat', ['$window', '$timeout',
 function($window, $timeout) {
 
-    var numRenderedItems = 50;
+    var numRenderedItems = 150;
     var numBufferItems;
 
     var w = angular.element($window);
@@ -80,6 +80,9 @@ function($window, $timeout) {
                 var numItems = 0;
                 var firstLoad = true;
 
+                var topItemOffset, bottomItemOffset;
+                var clippingTop = false, clippingBottom = false;
+
                 setCursor(0);
 
                 scope.$watchCollection(rhs, function(itemArray) {
@@ -98,6 +101,7 @@ function($window, $timeout) {
                     if(!bounced) {
                         updateCursor();
                     }
+                    updateClipping();
                 };
 
                 resizeHandler = function() {
@@ -118,8 +122,15 @@ function($window, $timeout) {
                     setCursor(c);
                 }
 
+                function updateClipping() {
+                    clippingTop = topItemOffset > wScrollTop;
+                    clippingBottom = bottomItemOffset < (wScrollTop + wHeight);
+                }
+
                 function updateUI() {
-                    element.css('padding-top', getTopSpacerHeight() + 'px');
+                    topItemOffset = getTopSpacerHeight();
+                    bottomItemOffset = topItemOffset + (numRenderedItems * itemHeight);
+                    element.css('padding-top', topItemOffset + 'px');
                     element.css('padding-bottom', getBottomSpacerHeight() + 'px');
                 }
 
