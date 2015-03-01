@@ -56,14 +56,11 @@ function($window, $timeout) {
 
     return {
         compile: function(tElement, tAttrs) {
-            var item = angular.element('<div class="item repeat"></div>');
-            /*var item = angular.element('<div class="item repeat">' +
-                                            '<div class="resizer"></div>' +
-                                           '</div>');*/
+            var item = angular.element('<div class="scroll-repeat-item"></div>');
 
             var expression = tAttrs.scrollRepeat;
 
-            var content = angular.element('<div class="content"></div>');
+            var content = angular.element('<div class="scroll-repeat-item-content"></div>');
             content.append(tElement.contents());
             item.append(content);
 
