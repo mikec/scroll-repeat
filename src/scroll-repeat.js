@@ -49,8 +49,8 @@ function($window, $timeout) {
     });
 
     function updateWindowSizes() {
-        wWidth = w.prop('innerWidth');
-        wHeight = w.prop('innerHeight');
+        wWidth = $window.innerWidth;
+        wHeight = $window.innerHeight;
         resizeDebounce = undefined;
         if(resizeHandler) resizeHandler();
     }
