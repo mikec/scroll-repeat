@@ -3,11 +3,12 @@ describe('scrollRepeat', function() {
 
     beforeEach(module('litl'));
 
-    beforeEach(inject(function($rootScope, $compile, $window) {
+    beforeEach(inject(function($rootScope, $compile, $window, $timeout) {
         this.$rootScope = $rootScope;
         this.scope = $rootScope.$new();
         this.$compile = $compile;
         this.$window = $window;
+        this.$timeout = $timeout;
     }));
 
     // assuming bufferAmt = 30;
@@ -22,10 +23,9 @@ describe('scrollRepeat', function() {
             this.$rootScope.$digest();
         });
 
-        // 10 + (10 * 30) = 310
+        // numRenderedItems = 10 + (10 * 30) = 310
 
         it('should set ng-repeat limit to -310', function() {
-            // 10 + (10 * 30)
             expect(this.scope.lim).toBe(-310);
         });
 
@@ -34,15 +34,50 @@ describe('scrollRepeat', function() {
         });
 
         it('should set top padding to 0', function() {
-            expect(parseInt(this.element.css('padding-top'))).toBe(0);
+            expectTopOffset.call(this).toBe(0);
         });
 
         it('should set bottom padding to 1900', function() {
             // (500 * 10) - (310 * 10)
-            expect(parseInt(this.element.css('padding-bottom'))).toBe(1900);
+            expectBottomOffset.call(this).toBe(1900);
+        });
+
+        describe('after scrolling down past the buffer', function() {
+
+            beforeEach(function() {
+                scrollWindowTo(this.$window, 1510);
+                this.$timeout.flush(250);
+            });
+
+            it('should set ng-repeat offset to 311 ', function() {
+                expect(this.scope.ofs).toBe(311);
+            });
+
+            it('should set top padding to 10', function() {
+                // (311 - 310) * 10
+                expectTopOffset.call(this).toBe(10);
+            });
+
+            it('should set bottom padding to 1890', function() {
+                expectBottomOffset.call(this).toBe(1890);
+            });
+
         });
 
     });
+
+    function expectTopOffset() {
+        return expect(parseInt(this.element.css('padding-top')));
+    }
+
+    function expectBottomOffset() {
+        return expect(parseInt(this.element.css('padding-bottom')));
+    }
+
+    function scrollWindowTo(win, xCoord) {
+        win.document.body.scrollTop = xCoord;
+        browserTrigger(win.document.body, 'scroll');
+    };
 
     function getTmpl(itmHeight) {
         var e = angular.element('<div scroll-repeat="itm in items"></div>');
