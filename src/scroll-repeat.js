@@ -13,6 +13,7 @@ function($window, $timeout) {
     var numBufferItems;
 
     var w = angular.element($window);
+    var body = angular.element($window.document.body);
 
     var wHeight, wWidth;
     var resizeDebounce;
@@ -95,7 +96,8 @@ function($window, $timeout) {
                         updateBufferVals();
                         firstLoad = false;
                     }
-                    updateUI();
+                    updateBodyHeight();
+                    updateOffset();
                 });
 
                 scrollHandler = function(bounced) {
@@ -113,7 +115,7 @@ function($window, $timeout) {
                     cursor = n;
                     scope.ofs = numRenderedItems + n;
                     scope.lim = numRenderedItems * -1;
-                    updateUI();
+                    updateOffset();
                 }
 
                 function updateCursor() {
@@ -129,11 +131,14 @@ function($window, $timeout) {
                     clippingBottom = bottomItemOffset < (wScrollTop + wHeight);
                 }
 
-                function updateUI() {
+                function updateBodyHeight() {
+                    body.css('height', (numItems * itemHeight) + 'px');
+                }
+
+                function updateOffset() {
                     topItemOffset = getTopSpacerHeight();
                     bottomItemOffset = topItemOffset + (numRenderedItems * itemHeight);
-                    element.css('padding-top', topItemOffset + 'px');
-                    element.css('padding-bottom', getBottomSpacerHeight() + 'px');
+                    element.css('transform', 'translateY(' + topItemOffset + 'px)');
                 }
 
                 function updateBufferVals() {

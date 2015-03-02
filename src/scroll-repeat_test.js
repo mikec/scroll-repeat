@@ -37,11 +37,6 @@ describe('scrollRepeat', function() {
             expectTopOffset.call(this).toBe(0);
         });
 
-        it('should set bottom padding to 1900', function() {
-            // (500 * 10) - (310 * 10)
-            expectBottomOffset.call(this).toBe(1900);
-        });
-
         describe('after scrolling down past the buffer', function() {
 
             beforeEach(function() {
@@ -58,20 +53,14 @@ describe('scrollRepeat', function() {
                 expectTopOffset.call(this).toBe(10);
             });
 
-            it('should set bottom padding to 1890', function() {
-                expectBottomOffset.call(this).toBe(1890);
-            });
-
         });
 
     });
 
     function expectTopOffset() {
-        return expect(parseInt(this.element.css('padding-top')));
-    }
-
-    function expectBottomOffset() {
-        return expect(parseInt(this.element.css('padding-bottom')));
+        var t = this.element.css('transform');
+        var px = t.match(/translateY\((.*)\)/)[1];
+        return expect(parseInt(px));
     }
 
     function scrollWindowTo(win, xCoord) {
@@ -96,4 +85,3 @@ describe('scrollRepeat', function() {
     }
 
 });
-
