@@ -138,7 +138,7 @@ function($window, $timeout) {
                 function updateOffset() {
                     topItemOffset = getTopSpacerHeight();
                     bottomItemOffset = topItemOffset + (numRenderedItems * itemHeight);
-                    element.css('transform', 'translateY(' + topItemOffset + 'px)');
+                    setTranslateY(topItemOffset);
                 }
 
                 function updateBufferVals() {
@@ -158,6 +158,13 @@ function($window, $timeout) {
 
                 function getBottomSpacerHeight() {
                     return (numItems - numRenderedItems - cursor) * itemHeight;
+                }
+
+                function setTranslateY(amt) {
+                    var t = 'translateY(' + amt + 'px)';
+                    element.css('transform', t);
+                    element.css('webkitTransform', t);
+                    element.css('mozTransform', t);
                 }
 
             };
