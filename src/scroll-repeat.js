@@ -80,7 +80,6 @@ function($window, $timeout) {
                 var cursor = 0;
                 var itemHeight = 0;
                 var numItems = 0;
-                var firstLoad = true;
 
                 var topItemOffset, bottomItemOffset;
                 var clippingTop = false, clippingBottom = false;
@@ -91,13 +90,9 @@ function($window, $timeout) {
                     if(itemArray) {
                         numItems = itemArray.length;
                     }
-                    if(firstLoad) {
-                        updateItemHeight();
-                        updateBufferVals();
-                        firstLoad = false;
-                    }
+                    updateItemHeight();
+                    updateBufferVals();
                     updateBodyHeight();
-                    updateOffset();
                 });
 
                 scrollHandler = function(bounced) {
@@ -150,7 +145,9 @@ function($window, $timeout) {
                 }
 
                 function updateBufferVals() {
-                    var numItemsOnScreen = Math.round(wHeight / itemHeight);
+                    var numItemsOnScreen =
+                            itemHeight > 0 ?
+                                Math.round(wHeight / itemHeight) : 0;
                     numAllowedItems = numItemsOnScreen + (numItemsOnScreen * bufferAmt);
                     numBufferItems = Math.round((numAllowedItems - numItemsOnScreen) / 2);
                     updateCursor();

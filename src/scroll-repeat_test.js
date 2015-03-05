@@ -104,6 +104,29 @@ describe('scrollRepeat', function() {
             expectTopOffset.call(this).toBe(0);
         });
 
+        describe('and items are added to the bound array', function() {
+
+            beforeEach(function() {
+                this.scope.items.push({});
+                this.scope.items.push({});
+                this.scope.items.push({});
+                this.$rootScope.$digest();
+            });
+
+            it('should set ng-repeat limit to -3', function() {
+                expect(this.scope.lim).toBe(-3);
+            });
+
+            it('should set ng-repeat offset to 3', function() {
+                expect(this.scope.ofs).toBe(3);
+            });
+
+            it('should set top padding to 0', function() {
+                expectTopOffset.call(this).toBe(0);
+            });
+
+        });
+
     });
 
     function expectTopOffset() {
