@@ -103,6 +103,7 @@ function($window, $timeout) {
                 };
 
                 resizeHandler = function() {
+                    updateItemHeight();
                     updateBufferVals();
                 };
 

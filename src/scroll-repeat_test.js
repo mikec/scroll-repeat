@@ -23,7 +23,8 @@ describe('scrollRepeat', function() {
             this.$rootScope.$digest();
         });
 
-        // numRenderedItems = 10 + (10 * 30) = 310
+        // numItemsOnScreen = 100 / 10 = 10
+        // numAllowedItems = 10 + (10 * 30) = 310
 
         it('should set ng-repeat limit to -310', function() {
             expect(this.scope.lim).toBe(-310);
@@ -51,6 +52,31 @@ describe('scrollRepeat', function() {
             it('should set top padding to 10', function() {
                 // (311 - 310) * 10
                 expectTopOffset.call(this).toBe(10);
+            });
+
+        });
+
+        describe('when window is resized resulting in item height change', function() {
+
+            beforeEach(function() {
+                this.$window.innerHeight = 150;
+                $j('.scroll-repeat-item').height(20);
+                browserTrigger(this.$window.document.body, 'resize');
+            });
+
+            // numItemsOnScreen = 150 / 20 = 8
+            // numAllowedItems = 8 + (8 * 30) = 248
+
+            it('should set ng-repeat limit to -248', function() {
+                expect(this.scope.lim).toBe(-248);
+            });
+
+            it('should set ng-repeat offset to 248', function() {
+                expect(this.scope.ofs).toBe(248);
+            });
+
+            it('should set top padding to 0', function() {
+                expectTopOffset.call(this).toBe(0);
             });
 
         });
