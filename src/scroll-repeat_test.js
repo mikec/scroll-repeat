@@ -17,7 +17,7 @@ describe('scrollRepeat', function() {
 
         beforeEach(function() {
             this.$window.innerHeight = 100;
-            this.scope.items = getMockItems(500);
+            this.scope.items = getMockItems(5000);
             this.element = this.$compile(getTmpl(10))(this.scope);
             angular.element(this.$window.document.body).append(this.element);
             this.$rootScope.$digest();
@@ -53,6 +53,31 @@ describe('scrollRepeat', function() {
                 expectTopOffset.call(this).toBe(10);
             });
 
+        });
+
+    });
+
+    describe('when number of items is less than allowed number ' +
+                'of rendered items', function() {
+
+        beforeEach(function() {
+            this.$window.innerHeight = 100;
+            this.scope.items = getMockItems(3);
+            this.element = this.$compile(getTmpl(10))(this.scope);
+            angular.element(this.$window.document.body).append(this.element);
+            this.$rootScope.$digest();
+        });
+
+        it('should set ng-repeat limit to -3', function() {
+            expect(this.scope.lim).toBe(-3);
+        });
+
+        it('should set ng-repeat offset to 3', function() {
+            expect(this.scope.ofs).toBe(3);
+        });
+
+        it('should set top padding to 0', function() {
+            expectTopOffset.call(this).toBe(0);
         });
 
     });

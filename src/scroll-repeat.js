@@ -9,7 +9,7 @@ angular.module('litl', []).directive('scrollRepeat', ['$window', '$timeout',
 function($window, $timeout) {
 
     var bufferAmt = 30;
-    var numRenderedItems = 1;
+    var numAllowedItems = 1;
     var numBufferItems;
 
     var w = angular.element($window);
@@ -113,15 +113,22 @@ function($window, $timeout) {
 
                 function setCursor(n) {
                     cursor = n;
-                    scope.ofs = numRenderedItems + n;
-                    scope.lim = numRenderedItems * -1;
+                    var ofsBase = numAllowedItems < numItems ?
+                                    numAllowedItems : numItems;
+                    var ofs = ofsBase + n;
+                    var lim = ofsBase * -1;
+                    if(ofs === 0) ofs = 1;
+                    if(lim === 0) lim = -1;
+                    scope.ofs = ofs;
+                    scope.lim = lim;
                     updateOffset();
                 }
 
                 function updateCursor() {
                     var c = Math.round(wScrollTop / itemHeight) - numBufferItems;
                     if(c < 0) c = 0;
-                    var maxC = numItems - numRenderedItems;
+                    var maxC = numItems - numAllowedItems;
+                    if(maxC < 0) maxC = 0;
                     if(c > maxC) c = maxC;
                     setCursor(c);
                 }
@@ -137,14 +144,14 @@ function($window, $timeout) {
 
                 function updateOffset() {
                     topItemOffset = getTopSpacerHeight();
-                    bottomItemOffset = topItemOffset + (numRenderedItems * itemHeight);
+                    bottomItemOffset = topItemOffset + (numAllowedItems * itemHeight);
                     setTranslateY(topItemOffset);
                 }
 
                 function updateBufferVals() {
                     var numItemsOnScreen = Math.round(wHeight / itemHeight);
-                    numRenderedItems = numItemsOnScreen + (numItemsOnScreen * bufferAmt);
-                    numBufferItems = Math.round((numRenderedItems - numItemsOnScreen) / 2);
+                    numAllowedItems = numItemsOnScreen + (numItemsOnScreen * bufferAmt);
+                    numBufferItems = Math.round((numAllowedItems - numItemsOnScreen) / 2);
                     updateCursor();
                 }
 
