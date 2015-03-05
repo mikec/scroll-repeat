@@ -131,8 +131,8 @@ describe('scrollRepeat', function() {
 
     function expectTopOffset() {
         var t = this.element.css('transform');
-        var px = t.match(/translateY\((.*)\)/)[1];
-        return expect(parseInt(px));
+        var transX = parseInt((new WebKitCSSMatrix(t)).m42);
+        return expect(transX);
     }
 
     function scrollWindowTo(win, xCoord) {

@@ -1,7 +1,7 @@
 module.exports = function(config) {
     config.set({
         frameworks: [
-            //'jasmine-jquery',
+            'jasmine-jquery',
             'jasmine'
         ],
         reporters: ['progress', 'coverage'],
