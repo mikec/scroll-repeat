@@ -82,6 +82,30 @@ describe('scrollRepeat', function() {
 
     });
 
+    describe('when initial number of items is 0', function() {
+
+        beforeEach(function() {
+            this.$window.innerHeight = 100;
+            this.scope.items = [];
+            this.element = this.$compile(getTmpl(10))(this.scope);
+            angular.element(this.$window.document.body).append(this.element);
+            this.$rootScope.$digest();
+        });
+
+        it('should set ng-repeat limit to -1', function() {
+            expect(this.scope.lim).toBe(-1);
+        });
+
+        it('should set ng-repeat offset to 1', function() {
+            expect(this.scope.ofs).toBe(1);
+        });
+
+        it('should set top padding to 0', function() {
+            expectTopOffset.call(this).toBe(0);
+        });
+
+    });
+
     function expectTopOffset() {
         var t = this.element.css('transform');
         var px = t.match(/translateY\((.*)\)/)[1];

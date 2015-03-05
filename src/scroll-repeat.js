@@ -125,7 +125,8 @@ function($window, $timeout) {
                 }
 
                 function updateCursor() {
-                    var c = Math.round(wScrollTop / itemHeight) - numBufferItems;
+                    var c = itemHeight > 0 ?
+                                Math.round(wScrollTop / itemHeight) - numBufferItems : 0;
                     if(c < 0) c = 0;
                     var maxC = numItems - numAllowedItems;
                     if(maxC < 0) maxC = 0;
@@ -156,7 +157,8 @@ function($window, $timeout) {
                 }
 
                 function updateItemHeight() {
-                    itemHeight = element.children()[0].offsetHeight;
+                    var firstItem = element.children()[0];
+                    itemHeight = firstItem ? firstItem.offsetHeight : 0;
                 }
 
                 function getTopSpacerHeight() {
