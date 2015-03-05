@@ -156,10 +156,6 @@ function($window, $timeout) {
                     return cursor * itemHeight;
                 }
 
-                function getBottomSpacerHeight() {
-                    return (numItems - numRenderedItems - cursor) * itemHeight;
-                }
-
                 function setTranslateY(amt) {
                     var t = 'translateY(' + amt + 'px)';
                     element.css('transform', t);
