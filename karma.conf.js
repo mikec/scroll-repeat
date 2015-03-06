@@ -21,6 +21,7 @@ module.exports = function(config) {
             'bower_components/angular-mocks/angular-mocks.js',
             'test/browserTrigger.js',
             'src/**/*.js',
+            'demo/demo.js',
             'demo/**/*.js'
         ]
 

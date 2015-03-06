@@ -4,22 +4,25 @@
 
   <link href="../dist/component.css" rel="stylesheet"></link>
   <link href="../dist/scroll-repeat.css" rel="stylesheet"></link>
+  <link href="demo.css" rel="stylesheet"></link>
 
   <script src="../bower_components/angular/angular.js"></script>
+  <script src="../bower_components/angular-route/angular-route.js"></script>
   <script src="../dist/scroll-repeat.js"></script>
 
-
-  <link href="demo.css" rel="stylesheet"></link>
   <script src="demo.js"></script>
+  <script src="basic/basic.js"></script>
+  <script src="grid/grid.js"></script>
 
 </head>
 <body ng-app="demoApp">
 
-  <div ng-controller="DemoCtrl as ctrl">
-    <div scroll-repeat="t in ctrl.things" class="things">
-      <div>{{t.number}}</div>
-    </div>
-  </div>
+  <ul class="nav">
+    <li><a href="#/">Basic</a></li>
+    <li><a href="#/grid">Grid</a></li>
+  </ul>
+
+  <div ng-view></div>
 
 </body>
 </html>

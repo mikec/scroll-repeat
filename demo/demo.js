@@ -1,10 +1,24 @@
 
-angular.module('demoApp', ['litl'])
-.controller('DemoCtrl', function() {
+window.demoApp = angular.module('demoApp', [
+    'ngRoute',
+    'litl'
+])
 
-    this.things = generateArray(10000);
+.config(['$routeProvider', function($routeProvider) {
+    $routeProvider.when('/', {
+        templateUrl: 'basic/basic.html',
+        controller: 'BasicCtrl',
+        controllerAs: 'ctrl'
+    }).when('/grid', {
+        templateUrl: 'grid/grid.html',
+        controller: 'GridCtrl',
+        controllerAs: 'ctrl'
+    });
+}])
 
-});
+.run(['$route', function($route) {
+
+}]);
 
 function generateArray(len) {
     var arr = [];
