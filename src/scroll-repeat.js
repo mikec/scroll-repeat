@@ -9,7 +9,7 @@ angular.module('litl', []).directive('scrollRepeat', ['$window', '$timeout',
 function($window, $timeout) {
 
     var bufferAmt = 30;
-    var numAllowedItems = 1;
+    var numAllowedItems = bufferAmt; // allowed on first load
     var numBufferItems;
 
     var w = angular.element($window);
@@ -91,9 +91,7 @@ function($window, $timeout) {
                         numItems = itemArray.length;
                     }
                     $timeout(function() {
-                        updateItemHeight();
-                        updateBufferVals();
-                        updateBodyHeight();
+                        updateItemRendering();
                     });
                 });
 
@@ -105,8 +103,7 @@ function($window, $timeout) {
                 };
 
                 resizeHandler = function() {
-                    updateItemHeight();
-                    updateBufferVals();
+                    updateItemRendering();
                 };
 
                 function setCursor(n) {
@@ -115,8 +112,8 @@ function($window, $timeout) {
                                     numAllowedItems : numItems;
                     var ofs = ofsBase + n;
                     var lim = ofsBase * -1;
-                    if(ofs === 0) ofs = 1;
-                    if(lim === 0) lim = -1;
+                    if(ofs === 0) ofs = numAllowedItems;
+                    if(lim === 0) lim = numAllowedItems * -1;
                     scope.ofs = ofs;
                     scope.lim = lim;
                     updateOffset();
@@ -147,18 +144,24 @@ function($window, $timeout) {
                     setTranslateY(topItemOffset);
                 }
 
-                function updateBufferVals() {
-                    var numItemsOnScreen =
-                            itemHeight > 0 ?
-                                Math.round(wHeight / itemHeight) : 0;
-                    numAllowedItems = numItemsOnScreen + (numItemsOnScreen * bufferAmt);
-                    numBufferItems = Math.round((numAllowedItems - numItemsOnScreen) / 2);
+                function updateItemRendering() {
+                    itemHeight = getItemHeight();
+
+                    if(itemHeight === 0) {
+                        numAllowedItems = bufferAmt;
+                        numBufferItems = 0;
+                    } else {
+                        var numItemsOnScreen = Math.round(wHeight / itemHeight);
+                        numAllowedItems = numItemsOnScreen + (numItemsOnScreen * bufferAmt);
+                        numBufferItems = Math.round((numAllowedItems - numItemsOnScreen) / 2);
+                    }
                     updateCursor();
+                    updateBodyHeight();
                 }
 
-                function updateItemHeight() {
+                function getItemHeight() {
                     var firstItem = element.children()[0];
-                    itemHeight = firstItem ? firstItem.offsetHeight : 0;
+                    return firstItem ? firstItem.offsetHeight : 0;
                 }
 
                 function getTopSpacerHeight() {

@@ -121,12 +121,12 @@ describe('scrollRepeat', function() {
             this.$timeout.flush();
         });
 
-        it('should set ng-repeat limit to -1', function() {
-            expect(this.scope.lim).toBe(-1);
+        it('should set ng-repeat limit to the buffer amount * -1', function() {
+            expect(this.scope.lim).toBe(-30);
         });
 
-        it('should set ng-repeat offset to 1', function() {
-            expect(this.scope.ofs).toBe(1);
+        it('should set ng-repeat offset to the buffer amount', function() {
+            expect(this.scope.ofs).toBe(30);
         });
 
         it('should set top padding to 0', function() {
@@ -169,6 +169,7 @@ describe('scrollRepeat', function() {
             this.element = this.$compile(getTmpl(10, 50))(this.scope);
             angular.element(this.$window.document.body).append(this.element);
             this.$rootScope.$digest();
+            this.$timeout.flush();
         });
 
         it('should work...', function() {
