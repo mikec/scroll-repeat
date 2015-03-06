@@ -21,6 +21,7 @@ describe('scrollRepeat', function() {
             this.element = this.$compile(getTmpl(10))(this.scope);
             angular.element(this.$window.document.body).append(this.element);
             this.$rootScope.$digest();
+            this.$timeout.flush();
         });
 
         // numItemsOnScreen = 100 / 10 = 10
@@ -92,6 +93,7 @@ describe('scrollRepeat', function() {
             this.element = this.$compile(getTmpl(10))(this.scope);
             angular.element(this.$window.document.body).append(this.element);
             this.$rootScope.$digest();
+            this.$timeout.flush();
         });
 
         it('should set ng-repeat limit to -3', function() {
@@ -116,6 +118,7 @@ describe('scrollRepeat', function() {
             this.element = this.$compile(getTmpl(10))(this.scope);
             angular.element(this.$window.document.body).append(this.element);
             this.$rootScope.$digest();
+            this.$timeout.flush();
         });
 
         it('should set ng-repeat limit to -1', function() {
@@ -137,6 +140,7 @@ describe('scrollRepeat', function() {
                 this.scope.items.push({});
                 this.scope.items.push({});
                 this.$rootScope.$digest();
+                this.$timeout.flush();
             });
 
             it('should set ng-repeat limit to -3', function() {
@@ -155,6 +159,24 @@ describe('scrollRepeat', function() {
 
     });
 
+
+    describe('with 10 items on screen and 2 items to a row', function() {
+
+        beforeEach(function() {
+            this.$window.innerHeight = 100;
+            this.$window.innerWidth = 100;
+            this.scope.items = getMockItems(5000);
+            this.element = this.$compile(getTmpl(10, 50))(this.scope);
+            angular.element(this.$window.document.body).append(this.element);
+            this.$rootScope.$digest();
+        });
+
+        it('should work...', function() {
+
+        });
+
+    });
+
     function expectTopOffset() {
         var t = this.element.css('transform');
         var transX = parseInt((new WebKitCSSMatrix(t)).m42);
@@ -166,10 +188,14 @@ describe('scrollRepeat', function() {
         browserTrigger(win.document.body, 'scroll');
     };
 
-    function getTmpl(itmHeight) {
+    function getTmpl(itmHeight, itmWidth) {
         var e = angular.element('<div scroll-repeat="itm in items"></div>');
         var innerElem = angular.element('<div></div>');
         innerElem.css('height', itmHeight + 'px');
+        if(itmWidth > 0) {
+            $j(innerElem).css('float', 'left');
+            $j(innerElem).width(itmWidth);
+        }
         e.append(innerElem);
         return e;
     }

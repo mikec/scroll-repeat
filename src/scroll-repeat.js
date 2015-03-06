@@ -90,9 +90,11 @@ function($window, $timeout) {
                     if(itemArray) {
                         numItems = itemArray.length;
                     }
-                    updateItemHeight();
-                    updateBufferVals();
-                    updateBodyHeight();
+                    $timeout(function() {
+                        updateItemHeight();
+                        updateBufferVals();
+                        updateBodyHeight();
+                    });
                 });
 
                 scrollHandler = function(bounced) {
