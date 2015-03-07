@@ -35,7 +35,7 @@ describe('scrollRepeat', function() {
             expect(this.scope.ofs).toBe(310);
         });
 
-        it('should set top padding to 0', function() {
+        it('should set top offset to 0', function() {
             expectTopOffset.call(this).toBe(0);
         });
 
@@ -50,7 +50,7 @@ describe('scrollRepeat', function() {
                 expect(this.scope.ofs).toBe(311);
             });
 
-            it('should set top padding to 10', function() {
+            it('should set top offset to 10', function() {
                 // (311 - 310) * 10
                 expectTopOffset.call(this).toBe(10);
             });
@@ -76,7 +76,7 @@ describe('scrollRepeat', function() {
                 expect(this.scope.ofs).toBe(248);
             });
 
-            it('should set top padding to 0', function() {
+            it('should set top offset to 0', function() {
                 expectTopOffset.call(this).toBe(0);
             });
 
@@ -104,7 +104,7 @@ describe('scrollRepeat', function() {
             expect(this.scope.ofs).toBe(3);
         });
 
-        it('should set top padding to 0', function() {
+        it('should set top offset to 0', function() {
             expectTopOffset.call(this).toBe(0);
         });
 
@@ -129,7 +129,7 @@ describe('scrollRepeat', function() {
             expect(this.scope.ofs).toBe(30);
         });
 
-        it('should set top padding to 0', function() {
+        it('should set top offset to 0', function() {
             expectTopOffset.call(this).toBe(0);
         });
 
@@ -151,7 +151,7 @@ describe('scrollRepeat', function() {
                 expect(this.scope.ofs).toBe(3);
             });
 
-            it('should set top padding to 0', function() {
+            it('should set top offset to 0', function() {
                 expectTopOffset.call(this).toBe(0);
             });
 
