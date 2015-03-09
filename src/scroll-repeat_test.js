@@ -214,6 +214,45 @@ describe('scrollRepeat', function() {
 
     });
 
+    describe('when top and bottom clipping occurs', function() {
+
+        beforeEach(function() {
+            var $this = this;
+            this.clipWatcherBottom = false;
+            this.clipWatcherTop = false;
+            this.scope.$watch('scrollRepeatClippingBottom', function(v) {
+                if(!$this.clipWatcherBottom) {
+                    $this.clipWatcherBottom = v;
+                }
+            });
+            this.scope.$watch('scrollRepeatClippingTop', function(v) {
+                if(!$this.clipWatcherTop) {
+                    $this.clipWatcherTop = v;
+                }
+            });
+
+            this.$window.innerHeight = 100;
+            this.scope.items = getMockItems(5000);
+            this.element = this.$compile(getTmpl(10))(this.scope);
+            this.body.width(100);
+            this.body.append(this.element);
+            this.$rootScope.$digest();
+            this.$timeout.flush();
+            scrollWindowTo.call(this, 8000);
+            this.$timeout.flush(250);
+            scrollWindowTo.call(this, 0);
+        });
+
+        it('should set scrollRepeatClippingBottom to true', function() {
+            expect(this.clipWatcherBottom).toEqual(true);
+        });
+
+        it('should set scrollRepeatClippingTop to true', function() {
+            expect(this.clipWatcherTop).toEqual(true);
+        });
+
+    });
+
     function expectTopOffset() {
         var t = this.element.css('transform');
         var transX = parseInt((new WebKitCSSMatrix(t)).m42);

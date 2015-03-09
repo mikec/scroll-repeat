@@ -83,7 +83,9 @@ function($window, $timeout) {
                 var numItems = 0;
 
                 var topItemOffset, bottomItemOffset;
-                var clippingTop = false, clippingBottom = false;
+
+                scope.scrollRepeatClippingTop = false;
+                scope.scrollRepeatClippingBottom = false;
 
                 setCursor(0);
 
@@ -131,8 +133,20 @@ function($window, $timeout) {
                 }
 
                 function updateClipping() {
-                    clippingTop = topItemOffset > wScrollTop;
-                    clippingBottom = bottomItemOffset < (wScrollTop + wHeight);
+                    var newClippingTop = topItemOffset > wScrollTop;
+                    var newClippingBottom = bottomItemOffset < (wScrollTop + wHeight);
+
+                    if(scope.scrollRepeatClippingTop !== newClippingTop) {
+                        scope.$apply(function() {
+                            scope.scrollRepeatClippingTop = newClippingTop;
+                        });
+                    }
+
+                    if(scope.scrollRepeatClippingBottom !== newClippingBottom) {
+                        scope.$apply(function() {
+                            scope.scrollRepeatClippingBottom = newClippingBottom;
+                        });
+                    }
                 }
 
                 function updateBodyHeight() {
