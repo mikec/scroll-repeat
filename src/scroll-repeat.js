@@ -10,6 +10,7 @@ function($window, $timeout) {
 
     var bufferAmt = 30;
     var numAllowedItems = bufferAmt; // allowed on first load
+    var numColumns = 1;
     var numBufferItems;
 
     var w = angular.element($window);
@@ -135,7 +136,7 @@ function($window, $timeout) {
                 }
 
                 function updateBodyHeight() {
-                    body.css('height', (numItems * itemHeight) + 'px');
+                    body.css('height', ((numItems / numColumns) * itemHeight) + 'px');
                 }
 
                 function updateOffset() {
@@ -146,17 +147,43 @@ function($window, $timeout) {
 
                 function updateItemRendering() {
                     itemHeight = getItemHeight();
+                    numColumns = getNumColumns();
 
                     if(itemHeight === 0) {
                         numAllowedItems = bufferAmt;
                         numBufferItems = 0;
                     } else {
-                        var numItemsOnScreen = Math.round(wHeight / itemHeight);
-                        numAllowedItems = numItemsOnScreen + (numItemsOnScreen * bufferAmt);
+                        var numItemsOnScreen = Math.round(wHeight / (itemHeight / numColumns));
+                        numAllowedItems = numItemsOnScreen +
+                                            (numItemsOnScreen * (bufferAmt * numColumns));
                         numBufferItems = Math.round((numAllowedItems - numItemsOnScreen) / 2);
                     }
                     updateCursor();
                     updateBodyHeight();
+                }
+
+                function getNumColumns() {
+                    var n = 1;
+                    var itmElems = element.children();
+                    var iOfs;
+                    for(var i in itmElems) {
+                        var e = itmElems[i];
+                        if(!e) break;
+                        else {
+                            var ofs = e.offsetTop;
+                            if(ofs >= 0) {
+                                if(angular.isUndefined(iOfs)) {
+                                    iOfs = ofs;
+                                }
+                                if(ofs == iOfs) {
+                                    n = parseInt(i) + 1;
+                                } else {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    return n;
                 }
 
                 function getItemHeight() {

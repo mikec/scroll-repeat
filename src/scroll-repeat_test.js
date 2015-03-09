@@ -39,6 +39,11 @@ describe('scrollRepeat', function() {
             expectTopOffset.call(this).toBe(0);
         });
 
+        it('should set body height to 50000', function() {
+            // 5000 * 10
+            expect($j(this.$window.document.body).height()).toBe(50000);
+        });
+
         describe('after scrolling down past the buffer', function() {
 
             beforeEach(function() {
@@ -108,6 +113,11 @@ describe('scrollRepeat', function() {
             expectTopOffset.call(this).toBe(0);
         });
 
+        it('should set body height to 30', function() {
+            // 3 * 10
+            expect($j(this.$window.document.body).height()).toBe(30);
+        });
+
     });
 
     describe('when initial number of items is 0', function() {
@@ -164,16 +174,20 @@ describe('scrollRepeat', function() {
 
         beforeEach(function() {
             this.$window.innerHeight = 100;
-            this.$window.innerWidth = 100;
             this.scope.items = getMockItems(5000);
             this.element = this.$compile(getTmpl(10, 50))(this.scope);
-            angular.element(this.$window.document.body).append(this.element);
+            var b = $j(this.$window.document.body);
+            b.width(100);
+            b.append(this.element);
             this.$rootScope.$digest();
+            $j('.scroll-repeat-item').css('float', 'left');
             this.$timeout.flush();
         });
 
-        it('should work...', function() {
-
+        it('should set body height to 25000', function() {
+            // 100 / 50 = 2
+            // (5000 / 2) * 10 = 25000
+            expect($j(this.$window.document.body).height()).toBe(25000);
         });
 
     });
@@ -190,12 +204,11 @@ describe('scrollRepeat', function() {
     };
 
     function getTmpl(itmHeight, itmWidth) {
-        var e = angular.element('<div scroll-repeat="itm in items"></div>');
-        var innerElem = angular.element('<div></div>');
-        innerElem.css('height', itmHeight + 'px');
+        var e = $j('<div scroll-repeat="itm in items"></div>');
+        var innerElem = $j('<div></div>');
+        innerElem.height(itmHeight);
         if(itmWidth > 0) {
-            $j(innerElem).css('float', 'left');
-            $j(innerElem).width(itmWidth);
+            innerElem.width(itmWidth);
         }
         e.append(innerElem);
         return e;
