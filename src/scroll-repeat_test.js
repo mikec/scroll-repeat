@@ -11,6 +11,10 @@ describe('scrollRepeat', function() {
         this.$timeout = $timeout;
     }));
 
+    afterEach(inject(function($document) {
+        $document.find('body').html('');
+    }));
+
     // assuming bufferAmt = 30;
 
     describe('with 10 items on screen', function() {
@@ -174,11 +178,12 @@ describe('scrollRepeat', function() {
 
         beforeEach(function() {
             this.$window.innerHeight = 100;
+            this.$window.innerWidth = 100;
             this.scope.items = getMockItems(5000);
             this.element = this.$compile(getTmpl(10, 50))(this.scope);
-            var b = $j(this.$window.document.body);
-            b.width(100);
-            b.append(this.element);
+            this.body = $j(this.$window.document.body);
+            this.body.width(100);
+            this.body.append(this.element);
             this.$rootScope.$digest();
             $j('.scroll-repeat-item').css('float', 'left');
             this.$timeout.flush();
@@ -187,7 +192,24 @@ describe('scrollRepeat', function() {
         it('should set body height to 25000', function() {
             // 100 / 50 = 2
             // (5000 / 2) * 10 = 25000
-            expect($j(this.$window.document.body).height()).toBe(25000);
+            expect(this.body.height()).toBe(25000);
+        });
+
+        describe('when window is resized, and there are 3 items in a row',
+        function() {
+
+            beforeEach(function() {
+                this.$window.innerWidth = 150;
+                this.body.width(150);
+                browserTrigger(this.body, 'resize');
+            });
+
+            it('should set body height to 16667', function() {
+                // 150 / 50 = 3
+                // (5000 / 3) * 10 = 16667
+                expect(this.body.height()).toBe(16667);
+            });
+
         });
 
     });
