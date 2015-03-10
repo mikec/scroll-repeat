@@ -195,6 +195,17 @@ describe('scrollRepeat', function() {
             expect(this.body.height()).toBe(25000);
         });
 
+        it('should set ng-repeat offset to 620 ', function() {
+            // bufferAmt = 30
+            // numItemsOnScreen = 20
+            // numAllowedItems = 20 + (20 * 30) = 620
+            expect(this.scope.ofs).toBe(620);
+        });
+
+        it('should set top offset to 0', function() {
+            expectTopOffset.call(this).toBe(0);
+        });
+
         describe('when window is resized, and there are 3 items in a row',
         function() {
 
@@ -208,6 +219,34 @@ describe('scrollRepeat', function() {
                 // 150 / 50 = 3
                 // (5000 / 3) * 10 = 16667
                 expect(this.body.height()).toBe(16667);
+            });
+
+        });
+
+        describe('after scrolling down past the buffer', function() {
+
+            beforeEach(function() {
+                scrollWindowTo.call(this, 1511);
+                this.$timeout.flush(250);
+            });
+
+            it('should set ng-repeat offset to 622 ', function() {
+                // numBufferedItems = 300
+                // offset base is 620
+                // item height = 10
+                // item offset = round(1511 / 10) = 151
+                // cursor = 151 * 2 - 300 = 2
+                // offset = 620 + 2 = 622
+                expect(this.scope.ofs).toBe(622);
+            });
+
+            it('should set top offset to 10', function() {
+                // cursor = 2
+                // numColumns = 2
+                // offset top =
+                //      cursor / numColumns * itemHeight =
+                //      2 / 2 * 10 = 10
+                expectTopOffset.call(this).toBe(10);
             });
 
         });

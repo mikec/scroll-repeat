@@ -123,9 +123,11 @@ function($window, $timeout) {
                 }
 
                 function updateCursor() {
-                    var c = itemHeight > 0 ?
-                                Math.round(wScrollTop / itemHeight) - numBufferItems : 0;
-                    if(c < 0) c = 0;
+                    var c = 0;
+                    if(itemHeight > 0) {
+                        c = (Math.round(wScrollTop / itemHeight) * numColumns) - numBufferItems;
+                        if(c < 0) c = 0;
+                    }
                     var maxC = numItems - numAllowedItems;
                     if(maxC < 0) maxC = 0;
                     if(c > maxC) c = maxC;
@@ -168,8 +170,7 @@ function($window, $timeout) {
                         numBufferItems = 0;
                     } else {
                         var numItemsOnScreen = Math.round(wHeight / (itemHeight / numColumns));
-                        numAllowedItems = numItemsOnScreen +
-                                            (numItemsOnScreen * (bufferAmt * numColumns));
+                        numAllowedItems = numItemsOnScreen + (numItemsOnScreen * bufferAmt);
                         numBufferItems = Math.round((numAllowedItems - numItemsOnScreen) / 2);
                     }
                     updateCursor();
@@ -206,7 +207,7 @@ function($window, $timeout) {
                 }
 
                 function getTopSpacerHeight() {
-                    return cursor * itemHeight;
+                    return Math.floor(cursor / numColumns) * itemHeight;
                 }
 
                 function setTranslateY(amt) {
