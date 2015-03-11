@@ -1,5 +1,17 @@
-window.demoApp.controller('GridCtrl', ['$timeout', function($timeout) {
+window.demoApp.controller('GridCtrl',
+['$http', '$rootScope',
+function($http, $rootScope) {
 
-    this.things = generateArray(5);
+    $rootScope.nav = 'grid';
+
+    var $this = this;
+
+    $http.get('flights.json')
+        .then(function(resp) {
+            for(var i=0; i < resp.data.length; i++) {
+                resp.data[i].record_number = (i + 1);
+            }
+            $this.flights = resp.data;
+        });
 
 }]);

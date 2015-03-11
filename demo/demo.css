@@ -1,21 +1,84 @@
 body {
     font-family: 'Arial', 'Helvetica', sans-serif;
-    padding: 20px;
+    padding: 0;
+    margin: 0;
+    background: white;
+}
+
+a {
+    text-decoration: none;
+}
+
+.header {
+    background: black;
+    font-size: 18px;
+    color: rgb(0, 255, 110);
+    font-family: monospace;
+}
+
+.header .title {
+    display: inline-block;
+    padding: 22px 0 22px 22px;
 }
 
 ul.nav {
+    display: inline-block;
     list-style: none;
-    padding-bottom: 20px;
     margin: 0;
+    padding: 0;
 }
 
 ul.nav li {
     display: inline-block;
-    padding-right: 20px;
 }
 
-.things .scroll-repeat-item {
+a.nav-link {
+    padding: 10px 20px;
+    color: rgb(111, 111, 111);
+    box-sizing: border-box;
+    transition: all 500ms;
+    -moz-transition: all 500ms;
+    -webkit-transition: all 500ms;
+}
+a.nav-link.active, a.nav-link:hover {
+    color: white;
+}
+
+.view {
+    padding: 4px;
+}
+
+.scroll-repeat-item {
     background: #EDEDED;
-    padding: 22px 20px 20px 20px;
+    position: relative;
+    padding: 18px 20px 16px 20px;
+}
+
+.record-number {
+    font-size: 10px;
+    color: gray;
+    position: absolute;
+}
+
+/* LIST */
+
+.list .scroll-repeat-item {
     border-bottom: 2px solid white;
+}
+
+.list .record-number {
+    top: 20px; right: 20px;
+}
+
+/* GRID */
+
+.grid .scroll-repeat-item {
+    float: left;
+    border-bottom: 2px solid white;
+    border-right: 2px solid white;
+    width: 200px;
+}
+
+.grid .record-number {
+    top: 4px; left: 20px;
 }

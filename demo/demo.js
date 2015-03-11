@@ -6,8 +6,8 @@ window.demoApp = angular.module('demoApp', [
 
 .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/', {
-        templateUrl: 'basic/basic.html',
-        controller: 'BasicCtrl',
+        templateUrl: 'list/list.html',
+        controller: 'ListCtrl',
         controllerAs: 'ctrl'
     }).when('/grid', {
         templateUrl: 'grid/grid.html',
@@ -16,9 +16,7 @@ window.demoApp = angular.module('demoApp', [
     });
 }])
 
-.run(['$route', function($route) {
-
-}]);
+.run(['$route', function($route) { }]);
 
 function generateArray(len) {
     var arr = [];

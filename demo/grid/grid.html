@@ -1,5 +1,7 @@
-<div>
-  <div scroll-repeat="t in ctrl.things" class="things">
-    <div>{{t.number}}</div>
+<div class="grid">
+  <div scroll-repeat="f in ctrl.flights" class="flights">
+    <div class="record-number">{{f.record_number | number}}</div>
+    <div>{{f.origin}} -> {{f.destination}} : {{f.distance}} mi.</div>
   </div>
+  <br style="clear:both" />
 </div>
