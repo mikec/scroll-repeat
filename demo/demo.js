@@ -6,11 +6,11 @@ window.demoApp = angular.module('demoApp', [
 
 .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/', {
-        templateUrl: 'list/list.html',
+        templateUrl: 'demo/list/list.html',
         controller: 'ListCtrl',
         controllerAs: 'ctrl'
     }).when('/grid', {
-        templateUrl: 'grid/grid.html',
+        templateUrl: 'demo/grid/grid.html',
         controller: 'GridCtrl',
         controllerAs: 'ctrl'
     });

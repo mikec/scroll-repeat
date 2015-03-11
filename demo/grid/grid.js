@@ -8,7 +8,7 @@ function($http, $rootScope) {
 
     this.loading = true;
 
-    $http.get('flights.json')
+    $http.get('demo/flights.json')
         .then(function(resp) {
             for(var i=0; i < resp.data.length; i++) {
                 resp.data[i].record_number = (i + 1);
