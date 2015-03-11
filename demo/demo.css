@@ -48,6 +48,10 @@ a.nav-link.active, a.nav-link:hover {
     padding: 4px;
 }
 
+.loading {
+    padding: 20px;
+}
+
 .scroll-repeat-item {
     background: #EDEDED;
     position: relative;
