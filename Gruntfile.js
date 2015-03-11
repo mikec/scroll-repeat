@@ -44,14 +44,6 @@ module.exports = function(grunt) {
             }
         },
 
-        less: {
-            unmin: {
-                files: {
-                    'dist/scroll-repeat.css': 'src/scroll-repeat.less'
-                }
-            }
-        },
-
         uglify: {
             min: {
                 files: {
@@ -94,7 +86,6 @@ module.exports = function(grunt) {
     grunt.registerTask('package', [
         'clean',
         'copy',
-        'less',
         'uglify'
     ]);
 
