@@ -1,4 +1,6 @@
 
+var scrollDebounceTime = 500;
+
 describe('scrollRepeat', function() {
 
     beforeEach(module('litl'));
@@ -53,7 +55,7 @@ describe('scrollRepeat', function() {
 
             beforeEach(function() {
                 scrollWindowTo.call(this, 1510);
-                this.$timeout.flush(250);
+                this.$timeout.flush(scrollDebounceTime);
             });
 
             it('should set ng-repeat offset to 311 ', function() {
@@ -227,7 +229,7 @@ describe('scrollRepeat', function() {
 
             beforeEach(function() {
                 scrollWindowTo.call(this, 1511);
-                this.$timeout.flush(250);
+                this.$timeout.flush(scrollDebounceTime);
             });
 
             it('should set ng-repeat offset to 622 ', function() {
@@ -278,7 +280,7 @@ describe('scrollRepeat', function() {
             this.$rootScope.$digest();
             this.$timeout.flush();
             scrollWindowTo.call(this, 8000);
-            this.$timeout.flush(250);
+            this.$timeout.flush(scrollDebounceTime);
             scrollWindowTo.call(this, 0);
         });
 
