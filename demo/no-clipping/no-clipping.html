@@ -1,0 +1,13 @@
+<div class="grid">
+
+  <div class="loading" ng-show="ctrl.loading">Loading flights...</div>
+
+  <div class="clipping-indicator" ng-show="scrollRepeatClippingBottom || scrollRepeatClippingTop">Loading...</div>
+
+  <div ng-show="!ctrl.loading && !scrollRepeatClippingBottom && !scrollRepeatClippingTop" scroll-repeat="f in ctrl.flights" class="flights">
+    <div class="record-number">{{f.record_number | number}}</div>
+    <div class="info">{{f.origin}} -> {{f.destination}} : {{f.distance}} mi.</div>
+  </div>
+  <br style="clear:both" />
+
+</div>
