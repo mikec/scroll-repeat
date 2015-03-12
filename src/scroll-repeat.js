@@ -1,7 +1,8 @@
 /*
- * scrollRepeat directive
+ * scroll-repeat
+ * (https://github.com/mikec/scroll-repeat)
  *
- * //
+ * Angular directive for scrolling through a large number of items
  *
  */
 
