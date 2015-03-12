@@ -67,6 +67,17 @@ a.nav-link.active, a.nav-link:hover {
     position: absolute;
 }
 
+.show-fade {
+    opacity: 1;
+}
+.show-fade.ng-hide-remove.ng-hide-remove-active {
+    -webkit-transition: all linear 0.5s;
+    transition: all linear 0.5s;
+}
+.show-fade.ng-hide {
+    opacity: 0;
+}
+
 /* LIST */
 
 .list .scroll-repeat-item {

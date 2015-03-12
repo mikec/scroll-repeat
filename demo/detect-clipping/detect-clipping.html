@@ -2,9 +2,9 @@
 
   <div class="loading" ng-show="ctrl.loading">Loading flights...</div>
 
-  <div class="clipping-indicator" ng-show="scrollRepeatClippingBottom || scrollRepeatClippingTop">Loading...</div>
+  <div class="clipping-indicator show-fade" ng-show="ctrl.clipping">Loading...</div>
 
-  <div ng-show="!ctrl.loading && !scrollRepeatClippingBottom && !scrollRepeatClippingTop" scroll-repeat="f in ctrl.flights" class="flights">
+  <div ng-show="!ctrl.loading && !ctrl.clipping" scroll-repeat="f in ctrl.flights" class="flights show-fade">
     <div class="record-number">{{f.record_number | number}}</div>
     <div class="info">{{f.origin}} -> {{f.destination}} : {{f.distance}} mi.</div>
   </div>

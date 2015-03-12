@@ -1,6 +1,7 @@
 
 window.demoApp = angular.module('demoApp', [
     'ngRoute',
+    'ngAnimate',
     'litl'
 ])
 
@@ -13,9 +14,9 @@ window.demoApp = angular.module('demoApp', [
         templateUrl: 'demo/grid/grid.html',
         controller: 'GridCtrl',
         controllerAs: 'ctrl'
-    }).when('/no-clipping', {
-        templateUrl: 'demo/no-clipping/no-clipping.html',
-        controller: 'NoClippingCtrl',
+    }).when('/detect-clipping', {
+        templateUrl: 'demo/detect-clipping/detect-clipping.html',
+        controller: 'DetectClippingCtrl',
         controllerAs: 'ctrl'
     });
 }])
