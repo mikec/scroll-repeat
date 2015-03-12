@@ -44,10 +44,19 @@ a.nav-link.active, a.nav-link:hover {
     color: white;
 }
 
-.gh-star {
+.right-nav {
     position: absolute;
-    right: -50px;
-    top: 20px;
+    right: 0;
+    top: 0;
+}
+.version {
+    display: inline-block;
+    padding: 22px;
+}
+.gh-star {
+    display: inline-block;
+    position: relative;
+    top: 4px;
 }
 
 .view {
