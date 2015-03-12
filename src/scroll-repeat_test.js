@@ -204,13 +204,13 @@ describe('scrollRepeat', function() {
     });
 
 
-    describe('with 10 items on screen and 2 items to a row', function() {
+    describe('with 4 items on screen and 2 items to a row', function() {
 
         beforeEach(function() {
             this.$window.innerHeight = 100;
             this.$window.innerWidth = 100;
             this.scope.items = getMockItems(5000);
-            this.element = this.$compile(getTmpl(10, 50))(this.scope);
+            this.element = this.$compile(getTmpl(50, 50))(this.scope);
             this.body.width(100);
             this.body.append(this.element);
             this.$rootScope.$digest();
@@ -218,17 +218,17 @@ describe('scrollRepeat', function() {
             this.$timeout.flush();
         });
 
-        it('should set body height to 25000', function() {
+        it('should set body height to 125000', function() {
             // 100 / 50 = 2
-            // (5000 / 2) * 10 = 25000
-            expect(this.body.height()).toBe(25000);
+            // (5000 / 2) * 50 = 125000
+            expect(this.body.height()).toBe(125000);
         });
 
         it('should set ng-repeat offset to 620 ', function() {
             // bufferAmt = 30
-            // numItemsOnScreen = 20
-            // numAllowedItems = 20 + (20 * 30) = 620
-            expect(this.scope.ofs).toBe(620);
+            // numItemsOnScreen = 4
+            // numAllowedItems = 4 + (4 * 30) = 124
+            expect(this.scope.ofs).toBe(124);
         });
 
         it('should set top offset to 0', function() {
@@ -246,8 +246,8 @@ describe('scrollRepeat', function() {
 
             it('should set body height to 16667', function() {
                 // 150 / 50 = 3
-                // (5000 / 3) * 10 = 16667
-                expect(this.body.height()).toBe(16667);
+                // (5000 / 3) * 50 = 16667
+                expect(this.body.height()).toBe(83333);
             });
 
         });
@@ -255,29 +255,58 @@ describe('scrollRepeat', function() {
         describe('after scrolling down past the buffer', function() {
 
             beforeEach(function() {
-                scrollWindowTo.call(this, 1511);
+                scrollWindowTo.call(this, 1550);
                 this.$timeout.flush(scrollDebounceTime);
             });
 
-            it('should set ng-repeat offset to 622 ', function() {
-                // numBufferedItems = 300
-                // offset base is 620
-                // item height = 10
-                // item offset = round(1511 / 10) = 151
-                // cursor = 151 * 2 - 300 = 2
-                // offset = 620 + 2 = 622
-                expect(this.scope.ofs).toBe(622);
+            it('should set ng-repeat offset to 126 ', function() {
+                // numBufferedItems = 60
+                // offset base is 124
+                // item height = 50
+                // item offset = round(1550 / 50) = 31
+                // cursor = 31 * 2 - 60 = 2
+                // offset = 124 + 2 = 126
+                expect(this.scope.ofs).toBe(126);
             });
 
-            it('should set top offset to 10', function() {
+            it('should set top offset to 50', function() {
                 // cursor = 2
                 // numColumns = 2
                 // offset top =
                 //      cursor / numColumns * itemHeight =
-                //      2 / 2 * 10 = 10
-                expectTopOffset.call(this).toBe(10);
+                //      2 / 2 * 50 = 50
+                expectTopOffset.call(this).toBe(50);
             });
 
+        });
+
+    });
+
+    describe('when max allowed items is exceeded', function() {
+
+        beforeEach(function() {
+            this.$window.innerHeight = 100;
+            this.$window.innerWidth = 100;
+            this.scope.items = getMockItems(5000);
+            this.element = this.$compile(getTmpl(10, 50))(this.scope);
+            this.body.width(100);
+            this.body.append(this.element);
+            this.$rootScope.$digest();
+            $j('.scroll-repeat-item').css('float', 'left');
+            this.$timeout.flush();
+            scrollWindowTo.call(this, 1210);
+            this.$timeout.flush(scrollDebounceTime);
+        });
+
+        it('buffer should not exceed the max', function() {
+            // numAllowedItems = 500
+            // numItemsOnScreen = 20
+            // numBufferedItems = (500 - 20) / 2 = 240
+            // offset base = numAllowedItems = 500
+            // item offset = round(1210 / 10) = 121
+            // cursor = 121 * 2 - 240 = 2
+            // offset = 500 + 2 = 502
+            expect(this.scope.ofs).toBe(502);
         });
 
     });

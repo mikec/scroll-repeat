@@ -9,6 +9,7 @@ angular.module('litl', []).directive('scrollRepeat', ['$window', '$timeout',
 function($window, $timeout) {
 
     var bufferAmt = 30;
+    var maxAllowedItems = 500;
     var numAllowedItems = bufferAmt; // allowed on first load
     var numColumns = 1;
     var numBufferItems;
@@ -175,6 +176,7 @@ function($window, $timeout) {
                     } else {
                         var numItemsOnScreen = Math.round(wHeight / (itemHeight / numColumns));
                         numAllowedItems = numItemsOnScreen + (numItemsOnScreen * bufferAmt);
+                        if(numAllowedItems > maxAllowedItems) numAllowedItems = maxAllowedItems;
                         numBufferItems = Math.round((numAllowedItems - numItemsOnScreen) / 2);
                     }
                     updateCursor();
