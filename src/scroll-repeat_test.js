@@ -12,6 +12,8 @@ describe('scrollRepeat', function() {
         this.$window = $window;
         this.$timeout = $timeout;
         this.body = $j($window.document.body);
+        this.body.css('padding', 0);
+        this.body.css('margin', 0);
     }));
 
     afterEach(inject(function($document) {
@@ -92,6 +94,31 @@ describe('scrollRepeat', function() {
                 expectTopOffset.call(this).toBe(0);
             });
 
+        });
+
+    });
+
+    describe('when the root element is offset from the top', function() {
+
+        beforeEach(function() {
+            this.body.css('margin-top', '200px');
+            this.$window.innerHeight = 100;
+            this.scope.items = getMockItems(5000);
+            this.element = this.$compile(getTmpl(10))(this.scope);
+            this.body.append(this.element);
+            this.$rootScope.$digest();
+            this.$timeout.flush();
+            // scrolling an extra 200px
+            scrollWindowTo.call(this, 1710);
+            this.$timeout.flush(scrollDebounceTime);
+        });
+
+        it('should set ng-repeat offset to 311 ', function() {
+            expect(this.scope.ofs).toBe(311);
+        });
+
+        it('should set top offset to 10', function() {
+            expectTopOffset.call(this).toBe(10);
         });
 
     });

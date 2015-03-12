@@ -81,6 +81,7 @@ function($window, $timeout) {
                 var cursor = 0;
                 var itemHeight = 0;
                 var numItems = 0;
+                var baseOffsetPx = 0;
 
                 var topItemOffset, bottomItemOffset;
 
@@ -125,7 +126,9 @@ function($window, $timeout) {
                 function updateCursor() {
                     var c = 0;
                     if(itemHeight > 0) {
-                        c = (Math.round(wScrollTop / itemHeight) * numColumns) - numBufferItems;
+                        var adjustedScrollTop = wScrollTop - baseOffsetPx;
+                        if(adjustedScrollTop < 0) adjustedScrollTop = 0;
+                        c = (Math.round(adjustedScrollTop / itemHeight) * numColumns) - numBufferItems;
                         if(c < 0) c = 0;
                     }
                     var maxC = numItems - numAllowedItems;
@@ -164,6 +167,7 @@ function($window, $timeout) {
                 function updateItemRendering() {
                     itemHeight = getItemHeight();
                     numColumns = getNumColumns();
+                    baseOffsetPx = getBaseOffsetPx();
 
                     if(itemHeight === 0) {
                         numAllowedItems = bufferAmt;
@@ -199,6 +203,10 @@ function($window, $timeout) {
                         }
                     }
                     return n;
+                }
+
+                function getBaseOffsetPx() {
+                    return element[0].offsetTop;
                 }
 
                 function getItemHeight() {
