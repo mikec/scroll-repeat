@@ -53,12 +53,15 @@ a.nav-link.active, a.nav-link:hover {
 }
 
 .scroll-repeat-item {
-    background: #EDEDED;
     position: relative;
+}
+.scroll-repeat-item .info {
+    background: #EDEDED;
+    border-right: 2px solid white;
     padding: 18px 20px 16px 20px;
 }
 
-.record-number {
+.scroll-repeat-item .record-number {
     font-size: 10px;
     color: gray;
     position: absolute;
@@ -79,10 +82,28 @@ a.nav-link.active, a.nav-link:hover {
 .grid .scroll-repeat-item {
     float: left;
     border-bottom: 2px solid white;
-    border-right: 2px solid white;
-    width: 200px;
 }
 
 .grid .record-number {
     top: 4px; left: 20px;
+}
+
+.grid .scroll-repeat-item { width: 100%; }
+@media(min-width: 500px) {
+    .grid .scroll-repeat-item { width: 50%; }
+}
+@media(min-width: 750px) {
+    .grid .scroll-repeat-item { width: 33.33333333333333%; }
+}
+@media(min-width: 1000px) {
+    .grid .scroll-repeat-item { width: 25%; }
+}
+@media(min-width: 1250px) {
+    .grid .scroll-repeat-item { width: 20%; }
+}
+@media(min-width: 1500px) {
+    .grid .scroll-repeat-item { width: 16.66666666666666%; }
+}
+@media(min-width: 1750px) {
+    .grid .scroll-repeat-item { width: 14.2857143%; }
 }
