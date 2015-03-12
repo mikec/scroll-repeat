@@ -37,7 +37,9 @@ module.exports = function(grunt) {
             }
         },
 
-        clean: { dist: 'dist' },
+        clean: {
+            dist: ['dist/*.js', 'dist/*.json']
+        },
 
         copy: {
             unmin: {
