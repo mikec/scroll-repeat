@@ -161,7 +161,8 @@ function($window, $timeout) {
 
                 function updateOffset() {
                     topItemOffset = getTopSpacerHeight();
-                    bottomItemOffset = topItemOffset + (numAllowedItems * itemHeight);
+                    var numRows = Math.ceil(numAllowedItems / numColumns);
+                    bottomItemOffset = topItemOffset + (numRows * itemHeight);
                     setTranslateY(topItemOffset);
                 }
 
