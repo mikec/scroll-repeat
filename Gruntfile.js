@@ -45,6 +45,10 @@ module.exports = function(grunt) {
             unmin: {
                 src: 'src/scroll-repeat.js',
                 dest: 'dist/scroll-repeat.js'
+            },
+            bower: {
+                src: 'bower.json',
+                dest: 'dist/bower.json'
             }
         },
 
@@ -105,32 +109,18 @@ module.exports = function(grunt) {
         run("git submodule init");
         run("git submodule update");
         run("cd dist; git checkout master");
-        // Bump version
-        var newVer = grunt.config('pkg').version;
-        //var comp = grunt.file.readJSON("dist/bower.json");
-        //grunt.log.writeln("Package version: " + newVer);
-        //grunt.log.writeln("Component version: " + comp.version);
-        //if( !semver.gt( newVer, comp.version ) ){
-        //    grunt.warn("Need to up-version package.json first!");
-        //}
     });
 
 
     grunt.registerTask('release-commit', 'push new build to bower component repo',
     function() {
         // Stamp version
-        var newVer = grunt.config('pkg').version;
-        //var comp = grunt.file.readJSON("dist/bower.json");
-        grunt.log.writeln("Package version: " + newVer);
-        //grunt.log.writeln("Component version: " + comp.version);
-        //if( !semver.gt( newVer, comp.version ) ){
-        //    grunt.warn("Need to up-version package.json first!");
-        //}
-        //comp.version = newVer;
-        //grunt.file.write("dist/bower.json", JSON.stringify(comp, null, '  ')+'\n');
+        var comp = grunt.file.readJSON('bower.json');
+        var newVer = comp.version;
+        grunt.log.writeln("Version: " + newVer);
         // Commit submodule
-        // Tag submodule
         run('cd dist; git commit -a -m"Build version '+ newVer +'"', "Commited to bower repo");
+        // Tag submodule
         run('cd dist; git tag ' + newVer + ' -m"Release version '+ newVer +'"', "Tagged bower repo");
         // Commit and tag this.
         run('git commit -a -m"Build version '+ newVer +'"', "Commited to source repo");
