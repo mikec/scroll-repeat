@@ -214,8 +214,14 @@ function($window, $timeout) {
                 }
 
                 function getItemHeight() {
-                    var firstItem = element.children()[0];
-                    return firstItem ? firstItem.offsetHeight : 0;
+                    var firstItem = angular.element(element.children()[0]);
+                    if(firstItem) {
+                        var firstItemContent = firstItem.children()[0];
+                        if(firstItemContent) {
+                            return firstItemContent.offsetHeight;
+                        }
+                    }
+                    return 0;
                 }
 
                 function getTopSpacerHeight() {

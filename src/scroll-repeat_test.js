@@ -75,7 +75,7 @@ describe('scrollRepeat', function() {
 
             beforeEach(function() {
                 this.$window.innerHeight = 150;
-                $j('.scroll-repeat-item').height(20);
+                $j('.scroll-repeat-item-content').height(20);
                 browserTrigger(this.body, 'resize');
             });
 
