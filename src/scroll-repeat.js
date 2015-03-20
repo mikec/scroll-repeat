@@ -190,9 +190,10 @@ function($window, $timeout) {
                     var itmElems = element.children();
                     var iOfs;
                     for(var i in itmElems) {
-                        var e = itmElems[i];
-                        if(!e) break;
+                        var outerElem = itmElems[i];
+                        if(!outerElem || typeof outerElem !== 'object') break;
                         else {
+                            var e = angular.element(outerElem).children()[0];
                             var ofs = e.offsetTop;
                             if(ofs >= 0) {
                                 if(angular.isUndefined(iOfs)) {
