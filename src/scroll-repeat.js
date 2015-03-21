@@ -127,6 +127,7 @@ function($window, $timeout) {
                     cursor = n;
                     var ofsBase = numAllowedItems < numItems ?
                                     numAllowedItems : numItems;
+                    ofsBase = ofsBase - (ofsBase % numColumns);
                     var ofs = ofsBase + n;
                     var lim = ofsBase * -1;
                     if(ofs === 0) ofs = numAllowedItems;
@@ -191,6 +192,7 @@ function($window, $timeout) {
                         numAllowedItems = numItemsOnScreen + (numItemsOnScreen * bufferAmt);
                         if(numAllowedItems > maxAllowedItems) numAllowedItems = maxAllowedItems;
                         numBufferItems = Math.round((numAllowedItems - numItemsOnScreen) / 2);
+                        numBufferItems = numBufferItems - (numBufferItems % numColumns);
                     }
                     updateCursor();
                     updateBodyHeight();

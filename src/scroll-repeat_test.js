@@ -282,6 +282,37 @@ describe('scrollRepeat', function() {
 
     });
 
+    describe('with a large number of columns', function() {
+
+        beforeEach(function() {
+            this.$window.innerHeight = 70;
+            this.$window.innerWidth = 70;
+            this.scope.items = getMockItems(5000);
+            this.element = this.$compile(getTmpl(10, 10))(this.scope);
+            this.body.width(70);
+            this.body.append(this.element);
+            this.$rootScope.$digest();
+            $j('.scroll-repeat-item').css('float', 'left');
+            this.$timeout.flush();
+        });
+
+        describe('when scrolling to the middle of the set', function() {
+
+            beforeEach(function() {
+                scrollWindowTo.call(this, 1550);
+                this.$timeout.flush(scrollDebounceTime);
+            });
+
+            it('should only set ng-repeat offset to a multiple of the number of columns',
+            function() {
+                // would be 1359, but needs to be adjusted to a multiple of 7
+                expect(this.scope.ofs).toBe(1358);
+            });
+
+        });
+
+    });
+
     describe('when max allowed items is exceeded', function() {
 
         beforeEach(function() {
