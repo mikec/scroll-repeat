@@ -59,6 +59,20 @@ a.nav-link.active, a.nav-link:hover {
     top: 4px;
 }
 
+@media(max-width:780px) {
+    .header {
+        font-size: 16px;
+    }
+    .header .title {
+        padding-bottom: 50px;
+    }
+    ul.nav {
+        position: absolute;
+        left: 3px;
+        top: 50px;
+    }
+}
+
 .view {
     padding: 4px;
 }
