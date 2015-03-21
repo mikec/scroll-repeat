@@ -193,8 +193,7 @@ function($window, $timeout) {
                         var outerElem = itmElems[i];
                         if(!outerElem || typeof outerElem !== 'object') break;
                         else {
-                            var e = angular.element(outerElem).children()[0];
-                            var ofs = e.offsetTop;
+                            var ofs = getCalculatedProperty(outerElem, 'offsetTop');
                             if(ofs >= 0) {
                                 if(angular.isUndefined(iOfs)) {
                                     iOfs = ofs;
@@ -215,14 +214,20 @@ function($window, $timeout) {
                 }
 
                 function getItemHeight() {
-                    var firstItem = angular.element(element.children()[0]);
-                    if(firstItem) {
-                        var firstItemContent = firstItem.children()[0];
-                        if(firstItemContent) {
-                            return firstItemContent.offsetHeight;
+                    return getCalculatedProperty(element.children()[0], 'offsetHeight');
+                }
+
+                function getCalculatedProperty(outerElem, prop) {
+                    var p = 0;
+                    if(outerElem && typeof outerElem == 'object') {
+                        var outerVal = outerElem[prop];
+                        var innerElem = angular.element(outerElem).children()[0];
+                        if(innerElem && typeof innerElem == 'object') {
+                            var innerVal = innerElem[prop];
+                            p = outerVal > innerVal ? outerVal : innerVal;
                         }
                     }
-                    return 0;
+                    return p;
                 }
 
                 function getTopSpacerHeight() {
