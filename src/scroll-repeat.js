@@ -59,10 +59,17 @@ function($window, $timeout) {
     });
 
     function updateWindowSizes() {
+        var wChanged = $window.innerWidth !== wWidth;
+        var hChanged = $window.innerHeight !== wHeight;
         wWidth = $window.innerWidth;
         wHeight = $window.innerHeight;
         resizeDebounce = undefined;
-        if(resizeHandler) resizeHandler();
+        if(resizeHandler) {
+            resizeHandler({
+                widthChanged: wChanged,
+                heightChanged: hChanged
+            });
+        }
     }
 
     return {
@@ -119,8 +126,10 @@ function($window, $timeout) {
                     updateClipping();
                 };
 
-                resizeHandler = function() {
-                    updateItemRendering();
+                resizeHandler = function(event) {
+                    if(event.widthChanged) {
+                        updateItemRendering();
+                    }
                 };
 
                 function setCursor(n) {

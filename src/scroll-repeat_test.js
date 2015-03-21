@@ -26,6 +26,7 @@ describe('scrollRepeat', function() {
 
         beforeEach(function() {
             this.$window.innerHeight = 100;
+            this.$window.innerWidth = 100;
             this.scope.items = getMockItems(5000);
             this.element = this.$compile(getTmpl(10))(this.scope);
             this.body.append(this.element);
@@ -74,6 +75,7 @@ describe('scrollRepeat', function() {
         describe('when window is resized resulting in item height change', function() {
 
             beforeEach(function() {
+                this.$window.innerWidth = 150;
                 this.$window.innerHeight = 150;
                 $j('.scroll-repeat-item-content').height(20);
                 browserTrigger(this.body, 'resize');
