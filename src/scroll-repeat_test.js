@@ -348,6 +348,33 @@ describe('scrollRepeat', function() {
             expect(this.clipWatcherTop).toEqual(true);
         });
 
+        it('should update cursor', function() {
+            expect(this.scope.ofs).toBe(960);
+        });
+
+        describe('and scrolling continues', function() {
+
+            beforeEach(function() {
+                scrollWindowTo.call(this, 7000);
+                this.$timeout.flush(100);
+                scrollWindowTo.call(this, 6000);
+                this.$timeout.flush(100);
+                scrollWindowTo.call(this, 5000);
+                this.$timeout.flush(100);
+                scrollWindowTo.call(this, 4000);
+                this.$timeout.flush(100);
+                scrollWindowTo.call(this, 3000);
+                this.$timeout.flush(100);
+                scrollWindowTo.call(this, 2000);
+                this.$timeout.flush(100);
+            });
+
+            it('should wait to update cursor until scroll ends', function() {
+                expect(this.scope.ofs).toBe(960);
+            });
+
+        });
+
     });
 
     describe('when top and bottom clipping occurs on a multi column layout', function() {

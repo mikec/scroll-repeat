@@ -26,6 +26,8 @@ function($window, $timeout) {
     var wScrollTop = 0;
     var scrollDebounce;
     var scrollDebounceTime = 500;
+    var scrollEnd;
+    var scrollEndTime = 200;
     var scrollHandler;
 
     updateWindowSizes();
@@ -45,11 +47,15 @@ function($window, $timeout) {
         wScrollTop = $window.document.body.scrollTop;
         if(angular.isUndefined(scrollDebounce)) {
             scrollDebounce = $timeout(function() {
-                if(scrollHandler) scrollHandler();
+                if(scrollHandler) scrollHandler('debounced');
                 scrollDebounce = undefined;
             }, scrollDebounceTime);
         }
-        if(scrollHandler) scrollHandler(true);
+        $timeout.cancel(scrollEnd);
+        scrollEnd = $timeout(function() {
+            scrollHandler('ended');
+        }, scrollEndTime);
+        if(scrollHandler) scrollHandler();
     });
 
     function updateWindowSizes() {
@@ -101,8 +107,13 @@ function($window, $timeout) {
                     });
                 });
 
-                scrollHandler = function(bounced) {
-                    if(!bounced) {
+                scrollHandler = function(scrollState) {
+                    if(scrollState == 'debounced' &&
+                        !scope.scrollRepeatClippingTop &&
+                        !scope.scrollRepeatClippingBottom)
+                    {
+                        updateCursor();
+                    } else if (scrollState == 'ended') {
                         updateCursor();
                     }
                     updateClipping();
