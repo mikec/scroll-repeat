@@ -84,10 +84,13 @@ a.nav-link.active, a.nav-link:hover {
 .scroll-repeat-item {
     position: relative;
 }
-.scroll-repeat-item .info {
+.scroll-repeat-item-content {
     background: #EDEDED;
+    height: 60px;
     border-right: 2px solid white;
-    padding: 18px 20px 16px 20px;
+}
+.scroll-repeat-item .info {
+    padding: 22px 18px;
 }
 
 .scroll-repeat-item .record-number {
