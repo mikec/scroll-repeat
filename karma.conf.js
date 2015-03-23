@@ -5,7 +5,7 @@ module.exports = function(config) {
             'jasmine'
         ],
         reporters: ['progress', 'coverage'],
-        browsers: ['Chrome'],
+        browsers: ['PhantomJS'],
         autoWatch: true,
 
         preprocessors: {
