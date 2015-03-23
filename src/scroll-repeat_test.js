@@ -286,6 +286,24 @@ describe('scrollRepeat', function() {
                 expectTopOffset.call(this).toBe(50);
             });
 
+            /*TODO: this test isn't working because all placeholder top
+                    elements have an offsetTop of 0. Might be easier
+                    to build an e2e test for this.
+
+            describe('and resizing while scrolled down', function() {
+
+                beforeEach(function() {
+                    resizeWindow.call(this, 150);
+                });
+
+                it('should set body height to 83350', function() {
+                    // 150 / 50 = 3
+                    // (5001 / 3) * 50 = 83350
+                    expectBodyHeight(1).toBe('83350px');
+                });
+
+            });*/
+
         });
 
     });

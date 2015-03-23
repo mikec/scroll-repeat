@@ -182,7 +182,7 @@ function($window, $timeout) {
                 function createPlaceholders() {
                     for(var i=0; i < phCreationChunkSize; i++) {
                         var phElemTop = createPlaceholder();
-                        phElementsTop.push(phElemTop);
+                        phElementsTop.unshift(phElemTop);
                         element.prepend(phElemTop);
                     }
                     /*for(var j=0; j < phCreationChunkSize; j++) {
@@ -291,9 +291,8 @@ function($window, $timeout) {
                     var itmElems = element.children();
                     var iOfs;
                     var colCount = 0;
-                    var firstIndex = phElementsTop.length;
-                    var lastIndex = itmElems.length - phElementsBottom.length - 1;
-                    for(var i = firstIndex; i <= lastIndex; i++) {
+                    var firstVisible = phHiddenTop;
+                    for(var i = firstVisible; i <= itmElems.length; i++) {
                         var outerElem = itmElems[i];
                         if(!outerElem || typeof outerElem !== 'object') break;
                         else {
