@@ -293,11 +293,17 @@ describe('scrollRepeat', function() {
     describe('with a large number of columns', function() {
 
         beforeEach(function() {
-            this.$window.innerHeight = 70;
-            this.$window.innerWidth = 70;
-            this.scope.items = getMockItems(5000);
-            this.element = this.$compile(getTmpl(10, 10))(this.scope);
-            this.body.width(70);
+            this.winWidth = 70;
+            this.itemWidth = 10;
+            this.numItems = 5000;
+            this.numCols = this.winWidth / this.itemWidth; // 7
+            this.numRows = Math.ceil(this.numItems / this.numCols);
+            this.$window.innerHeight = this.winWidth;
+            this.$window.innerWidth = this.winWidth;
+            this.scope.items = getMockItems(this.numItems);
+            this.element =
+                    this.$compile(getTmpl(this.itemWidth, this.itemWidth))(this.scope);
+            this.body.width(this.winWidth);
             this.body.append(this.element);
             this.$rootScope.$digest();
             $j('.scroll-repeat-item').css('float', 'left');
@@ -311,10 +317,38 @@ describe('scrollRepeat', function() {
                 this.$timeout.flush(scrollDebounceTime);
             });
 
-            it('should only set ng-repeat offset to a multiple of the number of columns',
+            it('should set ng-repeat limit to a multiple of the number of columns',
             function() {
-                // would be 1359, but needs to be adjusted to a multiple of 7
-                expect(this.scope.ofs).toBe(1358);
+                // lim = -500 adjusted to -497
+                var mod = this.scope.lim % this.numCols;
+                expect(mod).toBe(0);
+            });
+
+            it('should set ng-repeat offset to a multiple of the number of columns',
+            function() {
+                // would be 1359, adjusted to 1358
+                var mod = this.scope.ofs % this.numCols;
+                expect(mod).toBe(0);
+            });
+
+        });
+
+        describe('when scrolling past the bottom of the set', function() {
+
+            beforeEach(function() {
+                scrollWindowTo.call(this, 10000);
+                this.$timeout.flush(scrollDebounceTime);
+            });
+
+            it('should adjust offset to stop at the last item',
+            function() {
+                expect(this.scope.ofs).toBe(this.numRows * this.numCols);
+            });
+
+            it('should adjust limit to stop at the last item',
+            function() {
+                var newLim = -497 + (this.numCols - (this.numItems % this.numCols));
+                expect(this.scope.lim).toBe(newLim);
             });
 
         });
