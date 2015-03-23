@@ -101,6 +101,7 @@ function($window, $timeout) {
                 var itemHeight = 0;
                 var numItems = 0;
                 var baseOffsetPx = 0;
+                var bodyHeight = 0;
 
                 var topItemOffset, bottomItemOffset;
 
@@ -145,16 +146,33 @@ function($window, $timeout) {
                 };
 
                 function updatePlaceholders() {
-                    var numHiddenTop = phElementsTop.length - cursor;
-                    if(numHiddenTop < 0) numHiddenTop = 0;
-                    if(numHiddenTop !== phHiddenTop) {
+                    var numTopElems = phElementsTop.length;
+                    var mod = numTopElems % numColumns;
+                    var numHiddenTop = numTopElems - cursor;
+                    if(numHiddenTop < mod) numHiddenTop = mod;
+                    var diff = numHiddenTop - phHiddenTop;
+                    if(diff !== 0) {
+                        updatePhElementDisplay(phElementsTop, phHiddenTop, diff, phDisplayVal);
                         phHiddenTop = numHiddenTop;
-                        for(var i=0; i < phElementsTop.length; i++) {
-                            if(i < numHiddenTop) {
-                                phElementsTop[i].css('display', 'none');
-                            } else {
-                                phElementsTop[i].css('display', phDisplayVal);
-                            }
+                        phTopHeight =
+                            ((numTopElems - numHiddenTop) / numColumns) * itemHeight;
+                    }
+
+                    var numBottomElems = phElementsBottom.length;
+                    mod = numBottomElems % numColumns;
+                    var numHiddenBottom = numBottomElems -
+                                            wScrollTop + wHeight - bodyHeight;
+
+                }
+
+                function updatePhElementDisplay(elements, prev, diff, displayVal) {
+                    if(diff > 0) {
+                        for(var i = prev; i < prev + diff; i++) {
+                            elements[i].css('display', 'none');
+                        }
+                    } else if(diff < 0) {
+                        for(var j = prev - 1; j >= prev + diff; j--) {
+                            elements[j].css('display', displayVal);
                         }
                     }
                 }
@@ -177,7 +195,6 @@ function($window, $timeout) {
 
                 function setCursor(n) {
                     cursor = n;
-                    console.log('SET CURS: ' + n);
                     var ofsBase = numAllowedItems < numItems ?
                                     numAllowedItems : numItems;
                     ofsBase = ofsBase - (ofsBase % numColumns);
@@ -190,7 +207,7 @@ function($window, $timeout) {
 
                     updatePlaceholders();
 
-                    topItemOffset = Math.floor(cursor / numColumns) * itemHeight;
+                    topItemOffset = Math.floor(cursor / numColumns) * itemHeight - phTopHeight;
                     var numRows = Math.ceil(numAllowedItems / numColumns);
                     bottomItemOffset = topItemOffset + (numRows * itemHeight);
                     setTranslateY(topItemOffset);
@@ -228,7 +245,8 @@ function($window, $timeout) {
                 }
 
                 function updateBodyHeight() {
-                    body.css('height', ((numItems / numColumns) * itemHeight) + 'px');
+                    bodyHeight = (numItems / numColumns) * itemHeight;
+                    body.css('height', bodyHeight + 'px');
                 }
 
                 function updateItemRendering() {
