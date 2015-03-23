@@ -67,6 +67,7 @@ module.exports = function(grunt) {
             rebuild: {
                 files: [
                     'src/**/*',
+                    'test/**/*',
                     'demo/**/*'
                 ],
                 tasks: 'build'

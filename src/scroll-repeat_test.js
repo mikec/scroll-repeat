@@ -4,21 +4,29 @@ var placeholderChunkAmount = 100;
 
 describe('scrollRepeat', function() {
 
-    beforeEach(module('litl'));
+    beforeEach(function() {
 
-    beforeEach(inject(function($rootScope, $compile, $window, $timeout) {
-        this.$rootScope = $rootScope;
-        this.scope = $rootScope.$new();
-        this.$compile = $compile;
-        this.$window = $window;
-        this.$timeout = $timeout;
-        this.body = $j($window.document.body);
-        this.body.css('padding', 0);
-        this.body.css('margin', 0);
-    }));
+        module('litl', function($provide) {
+            $provide.value('$window', mockWindow);
+        });
+
+        inject(function($rootScope, $compile, $window, $timeout) {
+            this.$rootScope = $rootScope;
+            this.scope = $rootScope.$new();
+            this.$compile = $compile;
+            this.$window = $window;
+            this.$timeout = $timeout;
+            this.body = $j(window.document.body);
+            this.body.css('padding', 0);
+            this.body.css('margin', 0);
+        });
+
+    });
 
     afterEach(inject(function($document) {
         $document.find('body').html('');
+        this.$window.document.body.scrollTop = 0;
+        $j(this.element).remove();
     }));
 
     // assuming bufferAmt = 30;
@@ -28,6 +36,7 @@ describe('scrollRepeat', function() {
         beforeEach(function() {
             this.$window.innerHeight = 100;
             this.$window.innerWidth = 100;
+            bodyHeightSpy();
             this.scope.items = getMockItems(5000);
             this.element = this.$compile(getTmpl(10))(this.scope);
             this.body.append(this.element);
@@ -52,7 +61,7 @@ describe('scrollRepeat', function() {
 
         it('should set body height to 50000', function() {
             // 5000 * 10
-            expect(this.body.height()).toBe(50000);
+            expectBodyHeight().toBe('50000px');
         });
 
         describe('after scrolling down past the buffer', function() {
@@ -77,10 +86,8 @@ describe('scrollRepeat', function() {
         describe('when window is resized resulting in item height change', function() {
 
             beforeEach(function() {
-                this.$window.innerWidth = 150;
-                this.$window.innerHeight = 150;
                 $j('.scroll-repeat-item-content').height(20);
-                browserTrigger(this.body, 'resize');
+                resizeWindow.call(this, 150, 150);
             });
 
             // numItemsOnScreen = 150 / 20 = 8
@@ -137,6 +144,7 @@ describe('scrollRepeat', function() {
             this.scope.items = getMockItems(3);
             this.element = this.$compile(getTmpl(10))(this.scope);
             this.body.append(this.element);
+            bodyHeightSpy();
             this.$rootScope.$digest();
             this.$timeout.flush();
         });
@@ -155,7 +163,7 @@ describe('scrollRepeat', function() {
 
         it('should set body height to 30', function() {
             // 3 * 10
-            expect(this.body.height()).toBe(30);
+            expectBodyHeight().toBe('30px');
         });
 
     });
@@ -219,6 +227,7 @@ describe('scrollRepeat', function() {
             this.element = this.$compile(getTmpl(50, 50))(this.scope);
             this.body.width(100);
             this.body.append(this.element);
+            bodyHeightSpy();
             this.$rootScope.$digest();
             $j('.scroll-repeat-item').css('float', 'left');
             this.$timeout.flush();
@@ -227,7 +236,7 @@ describe('scrollRepeat', function() {
         it('should set body height to 125000', function() {
             // 100 / 50 = 2
             // (5000 / 2) * 50 = 125000
-            expect(this.body.height()).toBe(125000);
+            expectBodyHeight().toBe('125000px');
         });
 
         it('should set ng-repeat offset to 620 ', function() {
@@ -245,15 +254,13 @@ describe('scrollRepeat', function() {
         function() {
 
             beforeEach(function() {
-                this.$window.innerWidth = 150;
-                this.body.width(150);
-                browserTrigger(this.body, 'resize');
+                resizeWindow.call(this, 150);
             });
 
-            it('should set body height to 16667', function() {
+            it('should set body height to 83350', function() {
                 // 150 / 50 = 3
                 // (5001 / 3) * 50 = 83350
-                expect(this.body.height()).toBe(83350);
+                expectBodyHeight(1).toBe('83350px');
             });
 
         });
@@ -453,14 +460,35 @@ describe('scrollRepeat', function() {
 
     function expectTopOffset() {
         var t = this.element.css('transform');
-        var transX = parseInt((new WebKitCSSMatrix(t)).m42);
-        return expect(transX);
+        var transY = parseInt((new WebKitCSSMatrix(t)).m42);
+        return expect(transY);
     }
 
-    function scrollWindowTo(xCoord) {
-        this.body.scrollTop(xCoord);
-        browserTrigger(this.body, 'scroll');
+    function expectBodyHeight(callIndex) {
+        if(!callIndex) callIndex = 0;
+        return expect(mockBodyElem.css.calls.argsFor(callIndex)[1]);
+    }
+
+    function scrollWindowTo(scrollTop) {
+        this.$window.document.body.scrollTop = scrollTop;
+        mockWindowElem.boundEvents['scroll']();
     };
+
+    function resizeWindow(width, height) {
+        if(width > 0) {
+            this.$window.innerWidth = width;
+            this.body.width(width);
+        }
+        if(height > 0) {
+            this.$window.innerHeight = height;
+            this.body.height(height);
+        }
+        mockWindowElem.boundEvents['resize']();
+    }
+
+    function bodyHeightSpy() {
+        spyOn(mockBodyElem, 'css');
+    }
 
     function getTmpl(itmHeight, itmWidth) {
         var e = $j('<div scroll-repeat="itm in items"></div>');
