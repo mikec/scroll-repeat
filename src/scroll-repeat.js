@@ -158,10 +158,10 @@ function($window, $timeout) {
                             ((numTopElems - numHiddenTop) / numColumns) * itemHeight;
                     }
 
-                    var numBottomElems = phElementsBottom.length;
+                    /*var numBottomElems = phElementsBottom.length;
                     mod = numBottomElems % numColumns;
                     var numHiddenBottom = numBottomElems -
-                                            wScrollTop + wHeight - bodyHeight;
+                                            wScrollTop + wHeight - bodyHeight;*/
 
                 }
 
@@ -183,11 +183,11 @@ function($window, $timeout) {
                         phElementsTop.push(phElemTop);
                         element.prepend(phElemTop);
                     }
-                    for(var j=0; j < phCreationChunkSize; j++) {
+                    /*for(var j=0; j < phCreationChunkSize; j++) {
                         var phElemBottom = createPlaceholder();
                         phElementsBottom.push(phElemBottom);
                         element.append(phElemBottom);
-                    }
+                    }*/
                     if(angular.isUndefined(phDisplayVal)) {
                         phDisplayVal = phElementsTop[0].css('display');
                     }
@@ -245,7 +245,9 @@ function($window, $timeout) {
                 }
 
                 function updateBodyHeight() {
-                    bodyHeight = (numItems / numColumns) * itemHeight;
+                    var m = numItems % numColumns;
+                    var numItemsAdjusted = m === 0 ? numItems : numItems + (numColumns - m);
+                    bodyHeight = (numItemsAdjusted / numColumns) * itemHeight;
                     body.css('height', bodyHeight + 'px');
                 }
 

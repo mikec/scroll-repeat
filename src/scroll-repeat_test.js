@@ -252,8 +252,8 @@ describe('scrollRepeat', function() {
 
             it('should set body height to 16667', function() {
                 // 150 / 50 = 3
-                // (5000 / 3) * 50 = 16667
-                expect(this.body.height()).toBe(83333);
+                // (5001 / 3) * 50 = 83350
+                expect(this.body.height()).toBe(83350);
             });
 
         });
