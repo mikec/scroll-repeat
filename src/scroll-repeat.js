@@ -100,7 +100,9 @@ function($window, $timeout) {
                 var cursor = 0;
                 var itemHeight = 0;
                 var numItems = 0;
+                var numRows = 0;
                 var baseOffsetPx = 0;
+                var baseOffsetAmt = 0;
                 var bodyHeight = 0;
 
                 var topItemOffset, bottomItemOffset;
@@ -123,7 +125,7 @@ function($window, $timeout) {
                         numItems = itemArray.length;
                     }
                     $timeout(function() {
-                        updateItemRendering();
+                        recalcUI();
                     });
                 });
 
@@ -141,7 +143,7 @@ function($window, $timeout) {
 
                 resizeHandler = function(event) {
                     if(event.widthChanged) {
-                        updateItemRendering();
+                        recalcUI();
                     }
                 };
 
@@ -195,15 +197,20 @@ function($window, $timeout) {
 
                 function setCursor(n) {
                     cursor = n;
-                    var ofsBase = numAllowedItems < numItems ?
-                                    numAllowedItems : numItems;
-                    ofsBase = ofsBase - (ofsBase % numColumns);
-                    var ofs = ofsBase + n;
-                    var lim = ofsBase * -1;
-                    if(ofs === 0) ofs = numAllowedItems;
-                    if(lim === 0) lim = numAllowedItems * -1;
-                    scope.ofs = ofs;
-                    scope.lim = lim;
+
+                    if(numItems > 0) {
+                        var ofs = baseOffsetAmt + n;
+                        var lim = baseOffsetAmt;
+                        if(cursor + lim > numItems) {
+                            var dif = cursor + lim - numItems;
+                            lim -= dif;
+                        }
+                        scope.ofs = ofs;
+                        scope.lim = lim * -1;
+                    } else {
+                        scope.ofs = numAllowedItems;
+                        scope.lim = numAllowedItems * -1;
+                    }
 
                     updatePlaceholders();
 
@@ -221,9 +228,12 @@ function($window, $timeout) {
                         c = (Math.round(adjustedScrollTop / itemHeight) * numColumns) - numBufferItems;
                         if(c < 0) c = 0;
                     }
-                    var maxC = numItems - numAllowedItems;
+
+                    var m = numItems % numColumns;
+                    var maxC = (numRows * numColumns) - baseOffsetAmt;
                     if(maxC < 0) maxC = 0;
                     if(c > maxC) c = maxC;
+
                     setCursor(c);
                 }
 
@@ -245,13 +255,11 @@ function($window, $timeout) {
                 }
 
                 function updateBodyHeight() {
-                    var m = numItems % numColumns;
-                    var numItemsAdjusted = m === 0 ? numItems : numItems + (numColumns - m);
-                    bodyHeight = (numItemsAdjusted / numColumns) * itemHeight;
+                    bodyHeight = numRows * itemHeight;
                     body.css('height', bodyHeight + 'px');
                 }
 
-                function updateItemRendering() {
+                function recalcUI() {
                     itemHeight = getItemHeight();
                     numColumns = getNumColumns();
                     baseOffsetPx = getBaseOffsetPx();
@@ -266,6 +274,14 @@ function($window, $timeout) {
                         numBufferItems = Math.round((numAllowedItems - numItemsOnScreen) / 2);
                         numBufferItems = numBufferItems - (numBufferItems % numColumns);
                     }
+
+                    var m = numItems % numColumns;
+                    numRows = (m === 0 ? numItems : numItems + (numColumns - m)) / numColumns;
+
+                    var ofsAmt = numAllowedItems < numItems ?
+                                    numAllowedItems : numItems;
+                    baseOffsetAmt = ofsAmt - (ofsAmt % numColumns);
+
                     updateCursor();
                     updateBodyHeight();
                 }
