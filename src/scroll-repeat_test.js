@@ -422,6 +422,11 @@ describe('scrollRepeat', function() {
             this.expectNumberOfPlaceholders('bottom').toBe(0);
         });
 
+        it('should set offset and limit to show all items', function() {
+            expect(this.scope.ofs).toBe(5);
+            expect(this.scope.lim).toBe(-5);
+        });
+
     });
 
     describe('placeholder items', function() {

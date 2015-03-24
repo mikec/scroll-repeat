@@ -304,9 +304,11 @@ function($window, $timeout) {
                     var m = numItems % numColumns;
                     numRows = (m === 0 ? numItems : numItems + (numColumns - m)) / numColumns;
 
-                    var ofsAmt = numAllowedItems < numItems ?
-                                    numAllowedItems : numItems;
-                    baseOffsetAmt = ofsAmt - (ofsAmt % numColumns);
+                    if(numItems < numAllowedItems) {
+                        baseOffsetAmt = numItems;
+                    } else {
+                        baseOffsetAmt = numAllowedItems - (numAllowedItems % numColumns);
+                    }
 
                     updateCursor();
                     updateBodyHeight();
