@@ -440,6 +440,7 @@ describe('scrollRepeat', function() {
             this.scope.items = getMockItems(this.numItems);
             this.element = this.$compile(getTmpl(this.itemWidth,
                                                     this.itemWidth))(this.scope);
+            this.body.width(100);
             this.body.append(this.element);
             this.$rootScope.$digest();
             $j('.scroll-repeat-item').css('float', 'left');
@@ -458,19 +459,13 @@ describe('scrollRepeat', function() {
             this.expectNumberOfVisiblePlaceholders('top').toBe(0);
         });
 
-        /* TODO: needs fix... */
-        /* TEMPORARY SPEC */
-        it('should show all bottom placeholders', function() {
-            this.expectNumberOfVisiblePlaceholders('bottom').toBe(phChunkSize);
-        });
-        /* ACTUAL SPEC
         it('should show bottom placeholders with an exact number in the bottom row',
         function() {
             var n = phChunkSize;
             var m = (this.numItems % this.numCols);
             if(m > 0) n -= m;
             this.expectNumberOfVisiblePlaceholders('bottom').toBe(n);
-        });*/
+        });
 
         describe('scrolling to bottom', function() {
 
