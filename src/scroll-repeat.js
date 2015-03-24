@@ -188,9 +188,8 @@ function($window, $timeout) {
                     phTopHeight =
                         ((numTopElems - numHiddenTop) / numColumns) * itemHeight;
 
-                    var extraPh = numColumns - (numItems % numColumns);
                     var bottomPhRows = numRows - (scope.ofs / numColumns);
-                    var numVisiblebottom = (bottomPhRows * numColumns) + extraPh;
+                    var numVisiblebottom = bottomPhRows * numColumns;
                     var numHiddenBottom = phElementsBottom.length - numVisiblebottom;
                     if(numHiddenBottom < 0) numHiddenBottom = 0;
                     if(numHiddenBottom > phElementsBottom.length) {

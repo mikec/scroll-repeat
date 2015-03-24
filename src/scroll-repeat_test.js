@@ -442,6 +442,7 @@ describe('scrollRepeat', function() {
                                                     this.itemWidth))(this.scope);
             this.body.append(this.element);
             this.$rootScope.$digest();
+            $j('.scroll-repeat-item').css('float', 'left');
             this.$timeout.flush();
         });
 
@@ -482,13 +483,38 @@ describe('scrollRepeat', function() {
                 this.expectNumberOfVisiblePlaceholders('top').toBe(phChunkSize * phChunksAfter500ms);
             });
 
-            /* TODO: this is failing .. bug or bad spec??? seems to be fine in the demo
-            it('should hide all bottom placeholders except for excess in the the last row',
-            function() {
-                var m = (this.numItems % this.numCols);
-                this.expectNumberOfVisiblePlaceholders('bottom').toBe(this.numCols - m);
-            });*/
+            it('should hide all bottom placeholders', function() {
+                this.expectNumberOfVisiblePlaceholders('bottom').toBe(0);
+            });
 
+        });
+
+    });
+
+    describe('when number of items is a multiple of the number of columns and ' +
+                'scrolled to the bottom of the set',
+    function() {
+
+        beforeEach(function() {
+            this.$window.innerHeight = 100;
+            this.$window.innerWidth = 100;
+            this.itemWidth = 20;
+            this.numCols = this.$window.innerWidth / 20; // 5
+            this.numItems = 1000;
+            this.scope.items = getMockItems(this.numItems);
+            this.element = this.$compile(getTmpl(this.itemWidth,
+                                                    this.itemWidth))(this.scope);
+            this.body.width(100);
+            this.body.append(this.element);
+            this.$rootScope.$digest();
+            $j('.scroll-repeat-item').css('float', 'left');
+            this.$timeout.flush();
+            scrollWindowTo.call(this, 30000);
+            this.$timeout.flush(scrollDebounceTime);
+        });
+
+        it('should hide all bottom placeholders', function() {
+            this.expectNumberOfVisiblePlaceholders('bottom').toBe(0);
         });
 
     });
