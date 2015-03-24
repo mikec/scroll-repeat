@@ -13,7 +13,16 @@ function($http, $rootScope) {
             for(var i=0; i < resp.data.length; i++) {
                 resp.data[i].record_number = (i + 1);
             }
-            $this.flights = resp.data;
+
+            //TMP
+            var smallSet = [];
+            for(var i=0; i < 10000; i++) {
+                smallSet.push(resp.data[i]);
+            }
+
+            //$this.flights = resp.data;
+            $this.flights = smallSet;
+
             $this.loading = false;
         });
 
