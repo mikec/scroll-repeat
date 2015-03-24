@@ -111,8 +111,8 @@ function($window, $timeout) {
                 var phElementsBottom = [];
                 var phDisplayVal;
                 var phHiddenTop = 0;
+                var phHiddenBottom = 0;
                 var phTopHeight = 0;
-                var phBottomHeight = 0;
 
                 scope.scrollRepeatClippingTop = false;
                 scope.scrollRepeatClippingBottom = false;
@@ -152,18 +152,29 @@ function($window, $timeout) {
                     var mod = numTopElems % numColumns;
                     var numHiddenTop = numTopElems - cursor;
                     if(numHiddenTop < mod) numHiddenTop = mod;
-                    var diff = numHiddenTop - phHiddenTop;
-                    if(diff !== 0) {
-                        updatePhElementDisplay(phElementsTop, phHiddenTop, diff, phDisplayVal);
+                    var topDiff = numHiddenTop - phHiddenTop;
+                    if(topDiff !== 0) {
+                        updatePhElementDisplay(phElementsTop,
+                                phHiddenTop, topDiff, phDisplayVal);
                         phHiddenTop = numHiddenTop;
                         phTopHeight =
                             ((numTopElems - numHiddenTop) / numColumns) * itemHeight;
                     }
 
-                    /*var numBottomElems = phElementsBottom.length;
-                    mod = numBottomElems % numColumns;
-                    var numHiddenBottom = numBottomElems -
-                                            wScrollTop + wHeight - bodyHeight;*/
+                    var extraPh = numColumns - (numItems % numColumns);
+                    var bottomPhRows = numRows - (scope.ofs / numColumns);
+                    var numVisiblebottom = (bottomPhRows * numColumns) + extraPh;
+                    var numHiddenBottom = phElementsBottom.length - numVisiblebottom;
+                    if(numHiddenBottom < 0) numHiddenBottom = 0;
+                    if(numHiddenBottom > phElementsBottom.length) {
+                        numHiddenBottom = phElementsBottom.length;
+                    }
+                    var bottomDiff = numHiddenBottom - phHiddenBottom;
+                    if(bottomDiff !== 0) {
+                        updatePhElementDisplay(phElementsBottom,
+                                phHiddenBottom, bottomDiff, phDisplayVal);
+                        phHiddenBottom = numHiddenBottom;
+                    }
 
                 }
 
@@ -185,11 +196,11 @@ function($window, $timeout) {
                         phElementsTop.unshift(phElemTop);
                         element.prepend(phElemTop);
                     }
-                    /*for(var j=0; j < phCreationChunkSize; j++) {
+                    for(var j=0; j < phCreationChunkSize; j++) {
                         var phElemBottom = createPlaceholder();
                         phElementsBottom.push(phElemBottom);
                         element.append(phElemBottom);
-                    }*/
+                    }
                     if(angular.isUndefined(phDisplayVal)) {
                         phDisplayVal = phElementsTop[0].css('display');
                     }
