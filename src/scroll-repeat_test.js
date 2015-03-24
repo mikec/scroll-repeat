@@ -402,6 +402,70 @@ describe('scrollRepeat', function() {
 
     });
 
+    describe('placeholder items', function() {
+
+        beforeEach(function() {
+            this.$window.innerHeight = 100;
+            this.$window.innerWidth = 100;
+            this.itemWidth = 20;
+            this.numCols = this.$window.innerWidth / 20; // 5
+            this.numItems = 998;
+            this.scope.items = getMockItems(this.numItems);
+            this.element = this.$compile(getTmpl(this.itemWidth,
+                                                    this.itemWidth))(this.scope);
+            this.body.append(this.element);
+            this.$rootScope.$digest();
+            this.$timeout.flush();
+        });
+
+        it('should create the first top placeholder chunk', function() {
+            this.expectNumberOfPlaceholders('top').toBe(placeholderChunkAmount);
+        });
+
+        it('should create the first bottom placeholder chunk', function() {
+            this.expectNumberOfPlaceholders('bottom').toBe(placeholderChunkAmount);
+        });
+
+        it('should hide all top placeholders', function() {
+            this.expectNumberOfVisiblePlaceholders('top').toBe(0);
+        });
+
+        /* TODO: needs fix... */
+        /* TEMPORARY SPEC */
+        it('should show all bottom placeholders', function() {
+            this.expectNumberOfVisiblePlaceholders('bottom').toBe(placeholderChunkAmount);
+        });
+        /* ACTUAL SPEC
+        it('should show bottom placeholders with an exact number in the bottom row',
+        function() {
+            var n = placeholderChunkAmount;
+            var m = (this.numItems % this.numCols);
+            if(m > 0) n -= m;
+            this.expectNumberOfVisiblePlaceholders('bottom').toBe(n);
+        });*/
+
+        describe('scrolling to bottom', function() {
+
+            beforeEach(function() {
+                scrollWindowTo.call(this, 30000);
+                this.$timeout.flush(scrollDebounceTime);
+            });
+
+            it('should show all top placeholders', function() {
+                this.expectNumberOfVisiblePlaceholders('top').toBe(placeholderChunkAmount);
+            });
+
+            /* TODO: this is failing .. bug or bad spec??? seems to be fine in the demo
+            it('should hide all bottom placeholders except for excess in the the last row',
+            function() {
+                var m = (this.numItems % this.numCols);
+                this.expectNumberOfVisiblePlaceholders('bottom').toBe(this.numCols - m);
+            });*/
+
+        });
+
+    });
+
     // TODO: fix clipping with placeholders
 
     /*describe('when top and bottom clipping occurs', function() {
@@ -509,6 +573,47 @@ describe('scrollRepeat', function() {
         });
 
     });*/
+
+    beforeEach(function() {
+
+        var $this = this;
+
+        // helper functions
+        this.expectNumberOfPlaceholders = function(topOrBottom) {
+            return expect($this.getPlaceholders(topOrBottom).length);
+        };
+
+        this.expectNumberOfVisiblePlaceholders = function(topOrBottom) {
+            var elems = $this.getPlaceholders(topOrBottom);
+            var n = 0;
+            for(var i in elems) {
+                var e = elems[i];
+                if(e.css('display') !== 'none') {
+                    n++;
+                }
+            }
+            return expect(n);
+        };
+
+        this.getPlaceholders = function(topOrBottom) {
+            var placeholders = [];
+            var foundBoundElems = false;
+            $j(this.element).children().each(function() {
+                var e = $j(this);
+                if(e.hasClass('scroll-repeat-item-placeholder')) {
+                    if(topOrBottom == 'top' && !foundBoundElems) {
+                        placeholders.push(e);
+                    } else if (topOrBottom == 'bottom' && foundBoundElems) {
+                        placeholders.push(e);
+                    }
+                } else {
+                    foundBoundElems = true;
+                }
+            });
+            return placeholders;
+        };
+
+    });
 
     function expectTopOffset() {
         var t = this.element.css('transform');

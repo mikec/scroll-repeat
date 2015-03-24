@@ -78,6 +78,7 @@ function($window, $timeout) {
     return {
         compile: function(tElement, tAttrs) {
             var itemTmpl = '<div class="scroll-repeat-item"></div>';
+            var phTmpl = '<div class="scroll-repeat-item scroll-repeat-item-placeholder"></div>';
             var contentTmpl = '<div class="scroll-repeat-item-content"></div>';
             var expression = tAttrs.scrollRepeat;
 
@@ -354,7 +355,7 @@ function($window, $timeout) {
                 }
 
                 function createPlaceholder() {
-                    var itm = angular.element(itemTmpl);
+                    var itm = angular.element(phTmpl);
                     itm.append(angular.element(contentTmpl));
                     return itm;
                 }
