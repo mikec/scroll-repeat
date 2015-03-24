@@ -403,6 +403,27 @@ describe('scrollRepeat', function() {
 
     });
 
+    describe('with a small set of data', function() {
+
+        beforeEach(function() {
+            this.$window.innerHeight = 100;
+            this.$window.innerWidth = 100;
+            this.scope.items = getMockItems(5);
+            this.element = this.$compile(getTmpl(10, 50))(this.scope);
+            this.body.width(100);
+            this.body.append(this.element);
+            this.$rootScope.$digest();
+            $j('.scroll-repeat-item').css('float', 'left');
+            this.$timeout.flush();
+        });
+
+        it('should not create placeholder items', function() {
+            this.expectNumberOfPlaceholders('top').toBe(0);
+            this.expectNumberOfPlaceholders('bottom').toBe(0);
+        });
+
+    });
+
     describe('placeholder items', function() {
 
         beforeEach(function() {

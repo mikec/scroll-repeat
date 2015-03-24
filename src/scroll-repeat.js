@@ -128,7 +128,10 @@ function($window, $timeout) {
                     }
                     $timeout(function() {
                         recalcUI();
-                        if(numItems > 0 && !phCreateStarted) {
+                        if(numItems > 0 &&
+                            !phCreateStarted &&
+                            numItems > numAllowedItems)
+                        {
                             createPlaceholders();
                         }
                     });
