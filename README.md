@@ -56,6 +56,31 @@ These properties can help you display an indication that items are being loaded.
 
 scroll-repeat does not use isolated scope, so these properties are set on the scope where you define the directive.
 
+[Detect clipping demo](https://mikec.github.com/scroll-repeat/#/detect-clipping)
+
+
+### Placeholders
+
+Empty placeholders are shown when scrolling moves too fast to keep up with ng-repeat data binding. These can be styled with the `scroll-repeat-item-placeholder` class.
+
+By default, these placeholder items have no content. Content for placeholders can be defined separately from the bound item template, by using `scroll-repeat-item` and `scroll-repeat-placeholder`:
+
+    <div scroll-repeat="item in items">
+
+        <div scroll-repeat-item>
+            // content for bound items
+            <span>{{item.name}}</span>
+        </div>
+
+        <div scroll-repeat-placeholder>
+            // content for placeholder items
+            <span>LOADING</span>
+        </div>
+
+    </div>
+
+[Placeholders demo](https://mikec.github.com/scroll-repeat/#/placeholders)
+
 
 Known Issues
 ------------

@@ -18,6 +18,10 @@ window.demoApp = angular.module('demoApp', [
         templateUrl: 'demo/detect-clipping/detect-clipping.html',
         controller: 'DetectClippingCtrl',
         controllerAs: 'ctrl'
+    }).when('/placeholders', {
+        templateUrl: 'demo/placeholders/placeholders.html',
+        controller: 'PlaceholdersCtrl',
+        controllerAs: 'ctrl'
     });
 }])
 

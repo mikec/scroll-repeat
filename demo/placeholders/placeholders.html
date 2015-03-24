@@ -1,0 +1,19 @@
+<div class="grid">
+
+  <div class="loading" ng-show="ctrl.loading">Loading flights...</div>
+
+  <div ng-show="!ctrl.loading" scroll-repeat="f in ctrl.flights" class="flights">
+
+    <div scroll-repeat-item>
+      <div class="record-number">{{f.record_number | number}}</div>
+      <div class="info">{{f.origin}} -> {{f.destination}} : {{f.distance}} mi.</div>
+    </div>
+
+    <div scroll-repeat-placeholder>
+      <div class="loading">Loading...</div>
+    </div>
+
+  </div>
+  <br style="clear:both" />
+
+</div>

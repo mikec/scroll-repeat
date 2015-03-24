@@ -83,9 +83,28 @@ function($window, $timeout) {
             var contentTmpl = '<div class="scroll-repeat-item-content"></div>';
             var expression = tAttrs.scrollRepeat;
 
+            var tElemChildren = tElement.children();
+
+            var itemTmplContent;
+            var placeholderTmplContent;
+            for(var i=0; i < tElemChildren.length; i++) {
+                var c = tElemChildren[i];
+                if(c && typeof c === 'object') {
+                    var e = angular.element(c);
+                    if(c.hasAttribute('scroll-repeat-item')) {
+                        itemTmplContent = e.contents();
+                    } else if(c.hasAttribute('scroll-repeat-placeholder')) {
+                        placeholderTmplContent = e.contents();
+                    }
+                }
+            }
+            if(!itemTmplContent) {
+                itemTmplContent = tElement.contents();
+            }
+
             var item = angular.element(itemTmpl);
             var content = angular.element(contentTmpl);
-            content.append(tElement.contents());
+            content.append(angular.element(itemTmplContent));
             item.append(content);
 
             tElement.html('');
@@ -379,7 +398,11 @@ function($window, $timeout) {
 
                 function createPlaceholder() {
                     var itm = angular.element(phTmpl);
-                    itm.append(angular.element(contentTmpl));
+                    var ctElem = angular.element(contentTmpl);
+                    if(placeholderTmplContent) {
+                        ctElem.append(angular.element(placeholderTmplContent.clone()));
+                    }
+                    itm.append(ctElem);
                     return itm;
                 }
 

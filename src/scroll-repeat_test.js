@@ -493,6 +493,48 @@ describe('scrollRepeat', function() {
 
     });
 
+    describe('when placeholder template is defined with text nodes', function() {
+
+        beforeEach(function() {
+            this.scope.items = getMockItems(5000);
+            this.element = this.$compile(getPlaceholderTmpl('text'))(this.scope);
+            this.$rootScope.$digest();
+            this.$timeout.flush();
+        });
+
+        it('should append text node template to placeholders', function() {
+            var phElems = this.getPlaceholders('top');
+            expect($j(phElems[0].children()[0]).html()).toBe('PLACEHOLDER');
+        });
+
+        it('should append text node template to items', function() {
+            var itmElems = this.getItemElements();
+            expect($j($j(itmElems[0]).children()[0]).html()).toBe('ITEM');
+        });
+
+    });
+
+    describe('when placeholder template is defined with html', function() {
+
+        beforeEach(function() {
+            this.scope.items = getMockItems(5000);
+            this.element = this.$compile(getPlaceholderTmpl('html'))(this.scope);
+            this.$rootScope.$digest();
+            this.$timeout.flush();
+        });
+
+        it('should append text node template to placeholders', function() {
+            var phElems = this.getPlaceholders('top');
+            expect($j(phElems[0].children()[0]).html()).toBe('<div>PLACEHOLDER</div>');
+        });
+
+        it('should append text node template to items', function() {
+            var itmElems = this.getItemElements();
+            expect($j($j(itmElems[0]).children()[0]).html()).toBe('<div>ITEM</div>');
+        });
+
+    });
+
     // TODO: fix clipping with placeholders
 
     /*describe('when top and bottom clipping occurs', function() {
@@ -640,6 +682,12 @@ describe('scrollRepeat', function() {
             return placeholders;
         };
 
+        this.getItemElements = function() {
+            return $j(this.element)
+                        .find('.scroll-repeat-item')
+                        .not('.scroll-repeat-item-placeholder');
+        };
+
     });
 
     function expectTopOffset() {
@@ -683,6 +731,20 @@ describe('scrollRepeat', function() {
         }
         e.append(innerElem);
         return e;
+    }
+
+    function getPlaceholderTmpl(type) {
+        var tmpls = {
+            'text':     '<div scroll-repeat="itm in items">' +
+                            '<div scroll-repeat-item>ITEM</div>' +
+                            '<div scroll-repeat-placeholder>PLACEHOLDER</div>' +
+                        '</div>',
+            'html':     '<div scroll-repeat="itm in items">' +
+                            '<div scroll-repeat-item><div>ITEM</div></div>' +
+                            '<div scroll-repeat-placeholder><div>PLACEHOLDER</div></div>' +
+                        '</div>',
+        };
+        return tmpls[type];
     }
 
     function getMockItems(n) {
