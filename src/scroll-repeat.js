@@ -15,7 +15,8 @@ function($window, $timeout) {
     var numColumns = 1;
     var numBufferItems;
 
-    var phCreationChunkSize = 100;
+    var phCreationChunkSize = 250;
+    var phCreationInterval = 200;
     var phMaxAllowed = 5000;
 
     var w = angular.element($window);
@@ -108,6 +109,7 @@ function($window, $timeout) {
 
                 var topItemOffset, bottomItemOffset;
 
+                var phCreateStarted = false;
                 var phElementsTop = [];
                 var phElementsBottom = [];
                 var phDisplayVal;
@@ -118,8 +120,7 @@ function($window, $timeout) {
                 scope.scrollRepeatClippingTop = false;
                 scope.scrollRepeatClippingBottom = false;
 
-                createPlaceholders();
-                setCursor(0);
+                updateCursor();
 
                 scope.$watchCollection(rhs, function(itemArray) {
                     if(itemArray) {
@@ -127,6 +128,9 @@ function($window, $timeout) {
                     }
                     $timeout(function() {
                         recalcUI();
+                        if(numItems > 0 && !phCreateStarted) {
+                            createPlaceholders();
+                        }
                     });
                 });
 
@@ -148,7 +152,7 @@ function($window, $timeout) {
                     }
                 };
 
-                function updatePlaceholders() {
+                function updatePlaceholderDisplays() {
                     var numTopElems = phElementsTop.length;
                     var mod = numTopElems % numColumns;
                     var numHiddenTop = numTopElems - cursor;
@@ -158,9 +162,9 @@ function($window, $timeout) {
                         updatePhElementDisplay(phElementsTop,
                                 phHiddenTop, topDiff, phDisplayVal);
                         phHiddenTop = numHiddenTop;
-                        phTopHeight =
-                            ((numTopElems - numHiddenTop) / numColumns) * itemHeight;
                     }
+                    phTopHeight =
+                        ((numTopElems - numHiddenTop) / numColumns) * itemHeight;
 
                     var extraPh = numColumns - (numItems % numColumns);
                     var bottomPhRows = numRows - (scope.ofs / numColumns);
@@ -173,13 +177,12 @@ function($window, $timeout) {
                     var bottomDiff = numHiddenBottom - phHiddenBottom;
                     if(bottomDiff !== 0) {
                         updatePhElementDisplay(phElementsBottom,
-                                phHiddenBottom, bottomDiff, phDisplayVal);
+                                phHiddenBottom, bottomDiff, phDisplayVal, true);
                         phHiddenBottom = numHiddenBottom;
                     }
-
                 }
 
-                function updatePhElementDisplay(elements, prev, diff, displayVal) {
+                function updatePhElementDisplay(elements, prev, diff, displayVal, TST) {
                     if(diff > 0) {
                         for(var i = prev; i < prev + diff; i++) {
                             elements[i].css('display', 'none');
@@ -192,9 +195,10 @@ function($window, $timeout) {
                 }
 
                 function createPlaceholders() {
+                    phCreateStarted = true;
                     for(var i=0; i < phCreationChunkSize; i++) {
                         var phElemTop = createPlaceholder();
-                        phElementsTop.unshift(phElemTop);
+                        phElementsTop.push(phElemTop);
                         element.prepend(phElemTop);
                     }
                     for(var j=0; j < phCreationChunkSize; j++) {
@@ -205,6 +209,20 @@ function($window, $timeout) {
                     if(angular.isUndefined(phDisplayVal)) {
                         phDisplayVal = phElementsTop[0].css('display');
                     }
+
+                    updateOffset();
+
+                    if(phElementsTop.length < phMaxAllowed) {
+                        $timeout(createPlaceholders, phCreationInterval);
+                    }
+                }
+
+                function updateOffset() {
+                    updatePlaceholderDisplays();
+                    topItemOffset = Math.floor(cursor / numColumns) * itemHeight - phTopHeight;
+                    var numRows = Math.ceil(numAllowedItems / numColumns);
+                    bottomItemOffset = topItemOffset + (numRows * itemHeight);
+                    setTranslateY(topItemOffset);
                 }
 
                 function setCursor(n) {
@@ -224,12 +242,7 @@ function($window, $timeout) {
                         scope.lim = numAllowedItems * -1;
                     }
 
-                    updatePlaceholders();
-
-                    topItemOffset = Math.floor(cursor / numColumns) * itemHeight - phTopHeight;
-                    var numRows = Math.ceil(numAllowedItems / numColumns);
-                    bottomItemOffset = topItemOffset + (numRows * itemHeight);
-                    setTranslateY(topItemOffset);
+                    updateOffset();
                 }
 
                 function updateCursor() {
@@ -272,9 +285,7 @@ function($window, $timeout) {
                 }
 
                 function recalcUI() {
-                    itemHeight = getItemHeight();
-                    numColumns = getNumColumns();
-                    baseOffsetPx = getBaseOffsetPx();
+                    setCalcProps();
 
                     if(itemHeight === 0) {
                         numAllowedItems = bufferAmt;
@@ -298,13 +309,20 @@ function($window, $timeout) {
                     updateBodyHeight();
                 }
 
+                function setCalcProps() {
+                    itemHeight = getItemHeight();
+                    numColumns = getNumColumns();
+                    baseOffsetPx = getBaseOffsetPx();
+                }
+
                 function getNumColumns() {
                     var n = 1;
                     var itmElems = element.children();
                     var iOfs;
                     var colCount = 0;
                     var firstVisible = phHiddenTop;
-                    for(var i = firstVisible; i <= itmElems.length; i++) {
+                    var lastVisible = phHiddenTop + numItems;
+                    for(var i = firstVisible; i <= lastVisible; i++) {
                         var outerElem = itmElems[i];
                         if(!outerElem || typeof outerElem !== 'object') break;
                         else {

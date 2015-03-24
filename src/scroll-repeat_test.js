@@ -1,6 +1,7 @@
 
-var scrollDebounceTime = 500;
-var placeholderChunkAmount = 100;
+var scrollDebounceTime = 500;   // debounced scroll timeout
+var phChunkSize = 250;          // number of items in a placeholder
+var phChunksAfter500ms = 2;     // number of placeholder chunks created in 500ms
 
 describe('scrollRepeat', function() {
 
@@ -68,13 +69,13 @@ describe('scrollRepeat', function() {
 
             beforeEach(function() {
                 // compensate for placeholder top buffer
-                var scrollAmt = 1510 + (placeholderChunkAmount * 10);
+                var scrollAmt = 1510 + (phChunkSize * phChunksAfter500ms * 10);
                 scrollWindowTo.call(this, scrollAmt);
                 this.$timeout.flush(scrollDebounceTime);
             });
 
-            it('should set ng-repeat offset to 411 ', function() {
-                expect(this.scope.ofs).toBe(411);
+            it('should set ng-repeat offset to 811 ', function() {
+                expect(this.scope.ofs).toBe(811);
             });
 
             it('should set top offset to 10', function() {
@@ -121,13 +122,13 @@ describe('scrollRepeat', function() {
             this.$timeout.flush();
             // scrolling an extra 200px
             // compensate for placeholder top buffer
-            var scrollAmt = 1510 + 200 + (placeholderChunkAmount * 10);
+            var scrollAmt = 1510 + 200 + (phChunkSize * phChunksAfter500ms * 10);
             scrollWindowTo.call(this, scrollAmt);
             this.$timeout.flush(scrollDebounceTime);
         });
 
-        it('should set ng-repeat offset to 411 ', function() {
-            expect(this.scope.ofs).toBe(411);
+        it('should set ng-repeat offset to 811 ', function() {
+            expect(this.scope.ofs).toBe(811);
         });
 
         it('should set top offset to 10', function() {
@@ -268,13 +269,13 @@ describe('scrollRepeat', function() {
         describe('after scrolling down past the buffer', function() {
 
             beforeEach(function() {
-                var scrollAmt = 1550 + (placeholderChunkAmount * (50 / 2));
+                var scrollAmt = 1550 + (phChunkSize * phChunksAfter500ms * (50 / 2));
                 scrollWindowTo.call(this, scrollAmt);
                 this.$timeout.flush(scrollDebounceTime);
             });
 
-            it('should set ng-repeat offset to 226 ', function() {
-                expect(this.scope.ofs).toBe(226);
+            it('should set ng-repeat offset to 626 ', function() {
+                expect(this.scope.ofs).toBe(626);
             });
 
             it('should set top offset to 50', function() {
@@ -419,11 +420,11 @@ describe('scrollRepeat', function() {
         });
 
         it('should create the first top placeholder chunk', function() {
-            this.expectNumberOfPlaceholders('top').toBe(placeholderChunkAmount);
+            this.expectNumberOfPlaceholders('top').toBe(phChunkSize);
         });
 
         it('should create the first bottom placeholder chunk', function() {
-            this.expectNumberOfPlaceholders('bottom').toBe(placeholderChunkAmount);
+            this.expectNumberOfPlaceholders('bottom').toBe(phChunkSize);
         });
 
         it('should hide all top placeholders', function() {
@@ -433,12 +434,12 @@ describe('scrollRepeat', function() {
         /* TODO: needs fix... */
         /* TEMPORARY SPEC */
         it('should show all bottom placeholders', function() {
-            this.expectNumberOfVisiblePlaceholders('bottom').toBe(placeholderChunkAmount);
+            this.expectNumberOfVisiblePlaceholders('bottom').toBe(phChunkSize);
         });
         /* ACTUAL SPEC
         it('should show bottom placeholders with an exact number in the bottom row',
         function() {
-            var n = placeholderChunkAmount;
+            var n = phChunkSize;
             var m = (this.numItems % this.numCols);
             if(m > 0) n -= m;
             this.expectNumberOfVisiblePlaceholders('bottom').toBe(n);
@@ -452,7 +453,7 @@ describe('scrollRepeat', function() {
             });
 
             it('should show all top placeholders', function() {
-                this.expectNumberOfVisiblePlaceholders('top').toBe(placeholderChunkAmount);
+                this.expectNumberOfVisiblePlaceholders('top').toBe(phChunkSize * phChunksAfter500ms);
             });
 
             /* TODO: this is failing .. bug or bad spec??? seems to be fine in the demo
