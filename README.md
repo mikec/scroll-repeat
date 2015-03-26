@@ -82,6 +82,26 @@ By default, these placeholder items have no content. Content for placeholders ca
 [Placeholders demo](https://mikec.github.com/scroll-repeat/#/placeholders)
 
 
+Development
+-----------
+
+Install npm dependencies
+
+    npm install
+
+Install bower dependencies
+
+    bower install
+
+Run grunt
+
+    grunt
+
+View the demo locally
+
+    http://localhost:8000
+
+
 Known Issues
 ------------
 
