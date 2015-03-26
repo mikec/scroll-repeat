@@ -1,6 +1,6 @@
 
 var scrollDebounceTime = 500;   // debounced scroll timeout
-var phChunkSize = 250;          // number of items in a placeholder
+var phChunkSize = 50;           // number of items in a placeholder
 var phChunksAfter500ms = 2;     // number of placeholder chunks created in 500ms
 
 describe('scrollRepeat', function() {
@@ -74,8 +74,8 @@ describe('scrollRepeat', function() {
                 this.$timeout.flush(scrollDebounceTime);
             });
 
-            it('should set ng-repeat offset to 811 ', function() {
-                expect(this.scope.ofs).toBe(811);
+            it('should set ng-repeat offset to 411 ', function() {
+                expect(this.scope.ofs).toBe(411);
             });
 
             it('should set top offset to 10', function() {
@@ -127,8 +127,8 @@ describe('scrollRepeat', function() {
             this.$timeout.flush(scrollDebounceTime);
         });
 
-        it('should set ng-repeat offset to 811 ', function() {
-            expect(this.scope.ofs).toBe(811);
+        it('should set ng-repeat offset to 411 ', function() {
+            expect(this.scope.ofs).toBe(411);
         });
 
         it('should set top offset to 10', function() {
@@ -274,8 +274,8 @@ describe('scrollRepeat', function() {
                 this.$timeout.flush(scrollDebounceTime);
             });
 
-            it('should set ng-repeat offset to 626 ', function() {
-                expect(this.scope.ofs).toBe(626);
+            it('should set ng-repeat offset to 226 ', function() {
+                expect(this.scope.ofs).toBe(226);
             });
 
             it('should set top offset to 50', function() {

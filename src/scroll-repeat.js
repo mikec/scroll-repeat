@@ -15,9 +15,9 @@ function($window, $timeout) {
     var numColumns = 1;
     var numBufferItems;
 
-    var phCreationChunkSize = 250;
+    var phCreationChunkSize = 50;
     var phCreationInterval = 200;
-    var phMaxAllowed = 5000;
+    var phMaxAllowed = 500;
 
     var w = angular.element($window);
     var body = angular.element($window.document.body);
