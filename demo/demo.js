@@ -22,6 +22,10 @@ window.demoApp = angular.module('demoApp', [
         templateUrl: 'demo/placeholders/placeholders.html',
         controller: 'PlaceholdersCtrl',
         controllerAs: 'ctrl'
+    }).when('/async-loading', {
+        templateUrl: 'demo/async-loading/async-loading.html',
+        controller: 'AsyncLoadingCtrl',
+        controllerAs: 'ctrl'
     });
 }])
 
