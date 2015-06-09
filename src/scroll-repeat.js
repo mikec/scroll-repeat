@@ -16,8 +16,8 @@ function($window, $timeout) {
     var numBufferItems;
 
     var phCreationChunkSize = 50;
-    var phCreationInterval = 200;
-    var phMaxAllowed = 500;
+    var phCreationInterval = 100;
+    var phMaxAllowed = 250;
 
     var w = angular.element($window);
     var body = angular.element($window.document.body);
@@ -29,7 +29,7 @@ function($window, $timeout) {
 
     var wScrollTop = 0;
     var scrollDebounce;
-    var scrollDebounceTime = 500;
+    var scrollDebounceTime = 50;
     var scrollEnd;
     var scrollEndTime = 200;
     var scrollHandler;
@@ -125,6 +125,7 @@ function($window, $timeout) {
                 var baseOffsetPx = 0;
                 var baseOffsetAmt = 0;
                 var bodyHeight = 0;
+                var offset = 0;
 
                 var topItemOffset, bottomItemOffset;
 
@@ -157,12 +158,8 @@ function($window, $timeout) {
                 });
 
                 scrollHandler = function(scrollState) {
-                    if(scrollState == 'debounced' &&
-                        !scope.scrollRepeatClippingTop &&
-                        !scope.scrollRepeatClippingBottom)
+                    if(scrollState == 'debounced' || scrollState == 'ended')
                     {
-                        updateCursor();
-                    } else if (scrollState == 'ended') {
                         updateCursor();
                     }
                     updateClipping();
@@ -188,7 +185,7 @@ function($window, $timeout) {
                     phTopHeight =
                         ((numTopElems - numHiddenTop) / numColumns) * itemHeight;
 
-                    var bottomPhRows = numRows - (scope.ofs / numColumns);
+                    var bottomPhRows = numRows - (offset / numColumns);
                     var numHiddenBottom = phElementsBottom.length;
                     if(bottomPhRows > 0) {
                         var extraItms = numItems % numColumns;
@@ -254,16 +251,16 @@ function($window, $timeout) {
                     cursor = n;
 
                     if(numItems > 0) {
-                        var ofs = baseOffsetAmt + n;
+                        offset = baseOffsetAmt + n;
                         var lim = baseOffsetAmt;
                         if(cursor + lim > numItems) {
                             var dif = cursor + lim - numItems;
                             lim -= dif;
                         }
-                        scope.ofs = ofs;
+                        scope.ofs = offset;
                         scope.lim = lim * -1;
                     } else {
-                        scope.ofs = numAllowedItems;
+                        scope.ofs = offset = numAllowedItems;
                         scope.lim = numAllowedItems * -1;
                     }
 

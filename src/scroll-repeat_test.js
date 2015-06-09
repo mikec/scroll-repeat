@@ -65,7 +65,7 @@ describe('scrollRepeat', function() {
             expectBodyHeight().toBe('50000px');
         });
 
-        describe('after scrolling down past the buffer', function() {
+        /*describe('after scrolling down past the buffer', function() {
 
             beforeEach(function() {
                 // compensate for placeholder top buffer
@@ -82,7 +82,7 @@ describe('scrollRepeat', function() {
                 expectTopOffset.call(this).toBe(10);
             });
 
-        });
+        });*/
 
         describe('when window is resized resulting in item height change', function() {
 
@@ -110,7 +110,7 @@ describe('scrollRepeat', function() {
 
     });
 
-    describe('when the root element is offset from the top', function() {
+    /*describe('when the root element is offset from the top', function() {
 
         beforeEach(function() {
             this.body.css('margin-top', '200px');
@@ -135,7 +135,7 @@ describe('scrollRepeat', function() {
             expectTopOffset.call(this).toBe(10);
         });
 
-    });
+    });*/
 
     describe('when number of items is less than allowed number ' +
                 'of rendered items', function() {
