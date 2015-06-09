@@ -120,6 +120,7 @@ function($window, $timeout) {
 
                 var cursor = 0;
                 var itemHeight = 0;
+                var itemWidth = 0;
                 var numItems = 0;
                 var numRows = 0;
                 var baseOffsetPx = 0;
@@ -334,36 +335,13 @@ function($window, $timeout) {
 
                 function setCalcProps() {
                     itemHeight = getItemHeight();
+                    itemWidth = getItemWidth();
                     numColumns = getNumColumns();
                     baseOffsetPx = getBaseOffsetPx();
                 }
 
                 function getNumColumns() {
-                    var n = 1;
-                    var itmElems = element.children();
-                    var iOfs;
-                    var colCount = 0;
-                    var firstVisible = phHiddenTop;
-                    var lastVisible = phHiddenTop + numItems;
-                    for(var i = firstVisible; i <= lastVisible; i++) {
-                        var outerElem = itmElems[i];
-                        if(!outerElem || typeof outerElem !== 'object') break;
-                        else {
-                            var ofs = getCalculatedProperty(outerElem, 'offsetTop');
-                            if(ofs >= 0) {
-                                if(angular.isUndefined(iOfs)) {
-                                    iOfs = ofs;
-                                }
-                                if(ofs == iOfs) {
-                                    n = colCount + 1;
-                                } else {
-                                    break;
-                                }
-                                colCount++;
-                            }
-                        }
-                    }
-                    return n;
+                    return Math.floor(wWidth / itemWidth);
                 }
 
                 function getBaseOffsetPx() {
@@ -373,6 +351,11 @@ function($window, $timeout) {
                 function getItemHeight() {
                     return getCalculatedProperty(
                             element.children()[phElementsTop.length], 'offsetHeight');
+                }
+
+                function getItemWidth() {
+                    return getCalculatedProperty(
+                            element.children()[phElementsTop.length], 'offsetWidth');
                 }
 
                 function getCalculatedProperty(outerElem, prop) {
