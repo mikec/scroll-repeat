@@ -242,7 +242,6 @@ function($window, $timeout) {
                 function updateOffset() {
                     updatePlaceholderDisplays();
                     topItemOffset = Math.floor(cursor / numColumns) * itemHeight - phTopHeight;
-                    var numRows = Math.ceil(numAllowedItems / numColumns);
                     bottomItemOffset = topItemOffset + (numRows * itemHeight);
                     setTranslateY(topItemOffset);
                 }
