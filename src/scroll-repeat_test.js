@@ -7,7 +7,7 @@ describe('scrollRepeat', function() {
 
     beforeEach(function() {
 
-        module('litl', function($provide) {
+        module('litl.scrollRepeat', function($provide) {
             $provide.value('$window', mockWindow);
         });
 

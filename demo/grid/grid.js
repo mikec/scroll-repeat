@@ -1,6 +1,6 @@
 window.demoApp.controller('GridCtrl',
-['$http', '$rootScope',
-function($http, $rootScope) {
+['$http', '$rootScope', '$filter',
+function($http, $rootScope, $filter) {
 
     $rootScope.nav = 'grid';
 
@@ -10,18 +10,19 @@ function($http, $rootScope) {
 
     $http.get('demo/flights.json')
         .then(function(resp) {
-            for(var i=0; i < resp.data.length; i++) {
-                resp.data[i].record_number = (i + 1);
-            }
 
-            //TMP
-            var smallSet = [];
-            for(var i=0; i < 10000; i++) {
-                smallSet.push(resp.data[i]);
+            var set = [];
+            var n = 0;
+            for(var i=0; i < resp.data.length * 4; i++) {
+                if(n == resp.data.length) n = 0;
+                set[i] = angular.extend({}, resp.data[n]);
+                set[i].record_number = (i + 1);
+                n++;
             }
+            console.log('ADDED ' +
+                    $filter('number')(set.length) + ' records');
 
-            //$this.flights = resp.data;
-            $this.flights = smallSet;
+            $this.flights = set;
 
             $this.loading = false;
         });

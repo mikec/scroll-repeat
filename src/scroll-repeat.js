@@ -6,8 +6,8 @@
  *
  */
 
-angular.module('litl', []).directive('scrollRepeat', ['$window', '$timeout',
-function($window, $timeout) {
+angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
+['$window', '$timeout', function($window, $timeout) {
 
     var bufferAmt = 30;
     var maxAllowedItems = 500;
