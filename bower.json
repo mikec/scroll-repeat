@@ -1,6 +1,6 @@
 {
     "name": "scroll-repeat",
-    "version": "0.2.5",
+    "version": "0.2.6",
     "main": "scroll-repeat.js",
     "ignore": [],
     "dependencies": {
