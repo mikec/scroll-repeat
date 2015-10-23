@@ -48,7 +48,8 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
     });
 
     w.bind('scroll', function() {
-        wScrollTop = $window.document.body.scrollTop;
+        wScrollTop = $window.document.documentElement.scrollTop ||
+                      $window.document.body.scrollTop;
         if(angular.isUndefined(scrollDebounce)) {
             scrollDebounce = $timeout(function() {
                 if(scrollHandler) scrollHandler('debounced');
