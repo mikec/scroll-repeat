@@ -9,29 +9,50 @@
 angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
 ['$window', '$timeout', function($window, $timeout) {
 
+  // these can all be set in attributes, for example:
+  //   <div scroll-repeat="i in items" buffer-amt="10"></div>
+  //
+  // sets the number of items rendered above/below the visible window.
+  // number of visible items is multiplied by this number.
   var bufferAmt = 30;
+  //
+  // sets the maximum number of rendered items allowed
   var maxAllowedItems = 500;
+  //
+  // Placeholders (blank items above or below rendered items)
+  // are created in chunks on an interval, this
+  // sets the size of the chunks.
+  var phCreationChunkSize = 50;
+  //
+  // Amount of time to wait between creation of placeholder chunks.
+  var phCreationInterval = 100;
+  //
+  // Maximum number of placeholders allowed
+  var phMaxAllowed = 250;
+  //
+  // Time to wait before recalculating the UI during window resizing
+  var resizeDebounceTime = 500;
+  //
+  // Time to wait before recalculating the UI during scrolling
+  var scrollDebounceTime = 50;
+  //
+  // Time to wait before firing the scroll ended event
+  var scrollEndTime = 200;
+
   var numAllowedItems = bufferAmt; // allowed on first load
   var numColumns = 1;
   var numBufferItems;
-
-  var phCreationChunkSize = 50;
-  var phCreationInterval = 100;
-  var phMaxAllowed = 250;
 
   var w = angular.element($window);
   var body = angular.element($window.document.body);
 
   var wHeight, wWidth;
   var resizeDebounce;
-  var resizeDebounceTime = 500;
   var resizeHandler;
 
   var wScrollTop = 0;
   var scrollDebounce;
-  var scrollDebounceTime = 50;
   var scrollEnd;
-  var scrollEndTime = 200;
   var scrollHandler;
 
   updateWindowSizes();
@@ -79,6 +100,16 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
 
   return {
     compile: function(tElement, tAttrs) {
+
+      bufferAmt = parseInt(tAttrs.bufferAmt) || bufferAmt;
+      maxAllowedItems = parseInt(tAttrs.maxAllowedItems) || maxAllowedItems;
+      phCreationChunkSize = parseInt(tAttrs.phCreationChunkSize) || phCreationChunkSize;
+      phCreationInterval = parseInt(tAttrs.phCreationInterval) || phCreationInterval;
+      phMaxAllowed = parseInt(tAttrs.phMaxAllowed) || phMaxAllowed;
+      resizeDebounceTime = parseInt(tAttrs.resizeDebounceTime) || resizeDebounceTime;
+      scrollDebounceTime = parseInt(tAttrs.scrollDebounceTime) || scrollDebounceTime;
+      scrollEndTime = parseInt(tAttrs.scrollEndTime) || scrollEndTime;
+
       var itemTmpl = '<div class="scroll-repeat-item"></div>';
       var phTmpl = '<div class="scroll-repeat-item scroll-repeat-item-placeholder"></div>';
       var contentTmpl = '<div class="scroll-repeat-item-content"></div>';
