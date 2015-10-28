@@ -2,7 +2,7 @@
 window.demoApp = angular.module('demoApp', [
     'ngRoute',
     'ngAnimate',
-    'litl'
+    'litl.scrollRepeat'
 ])
 
 .config(['$routeProvider', function($routeProvider) {
