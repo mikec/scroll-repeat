@@ -2,6 +2,8 @@
 scroll-repeat
 =============
 
+[![Build Status](https://travis-ci.org/mikec/scroll-repeat.svg?branch=master)](https://travis-ci.org/mikec/scroll-repeat)
+
 Angular directive for displaying a large number of items (100,000+) in a scrolling view.
 
 

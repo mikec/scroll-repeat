@@ -88,7 +88,7 @@ module.exports = function(grunt) {
 
     require('load-grunt-tasks')(grunt);
 
-    grunt.registerTask('check', ['jshint']);
+    grunt.registerTask('check', ['jshint', 'test']);
 
     grunt.registerTask('test', ['karma']);
 
@@ -100,7 +100,6 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build', [
         'check',
-        'test',
         'package'
     ]);
 
