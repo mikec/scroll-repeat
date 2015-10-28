@@ -3,6 +3,9 @@ var scrollDebounceTime = 500;   // debounced scroll timeout
 var phChunkSize = 50;           // number of items in a placeholder
 var phChunksAfter500ms = 2;     // number of placeholder chunks created in 500ms
 
+var bufferAmt = 30;
+var maxAllowedItems = 500;
+
 describe('scrollRepeat', function() {
 
   beforeEach(function() {
@@ -757,7 +760,10 @@ describe('scrollRepeat', function() {
   }
 
   function getTmpl(itmHeight, itmWidth) {
-    var e = $j('<div scroll-repeat="itm in items"></div>');
+    var e = $j('<div scroll-repeat="itm in items" ' +
+                'buffer-amt="' + bufferAmt + '"' +
+                'max-allowed-items="' + maxAllowedItems + '"' +
+                '></div>');
     var innerElem = $j('<div></div>');
     innerElem.height(itmHeight);
     if(itmWidth > 0) {

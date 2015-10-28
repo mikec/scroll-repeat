@@ -14,10 +14,10 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
   //
   // sets the number of items rendered above/below the visible window.
   // number of visible items is multiplied by this number.
-  var bufferAmt = 30;
+  var bufferAmt = 5;
   //
   // sets the maximum number of rendered items allowed
-  var maxAllowedItems = 500;
+  var maxAllowedItems = 100;
   //
   // Placeholders (blank items above or below rendered items)
   // are created in chunks on an interval, this
@@ -34,10 +34,10 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
   var resizeDebounceTime = 500;
   //
   // Time to wait before recalculating the UI during scrolling
-  var scrollDebounceTime = 50;
+  var scrollDebounceTime = 500;
   //
   // Time to wait before firing the scroll ended event
-  var scrollEndTime = 200;
+  var scrollEndTime = 500;
 
   var numAllowedItems = bufferAmt; // allowed on first load
   var numColumns = 1;
