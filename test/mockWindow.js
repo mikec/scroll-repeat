@@ -1,5 +1,8 @@
 var mockWindow = {
     document: {
+        documentElement: {
+            scrollTop: 0
+        },
         body: {
             scrollTop: 0
         }

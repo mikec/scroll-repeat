@@ -735,6 +735,11 @@ describe('scrollRepeat', function() {
         mockWindowElem.boundEvents['scroll']();
     };
 
+    function scrollWindowDocElemTo(scrollTop) {
+        this.$window.document.documentElement.scrollTop = scrollTop;
+        mockWindowElem.boundEvents['scroll']();
+    };
+
     function resizeWindow(width, height) {
         if(width > 0) {
             this.$window.innerWidth = width;
