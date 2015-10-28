@@ -170,9 +170,6 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
         var phHiddenBottom = 0;
         var phTopHeight = 0;
 
-        scope.scrollRepeatClippingTop = false;
-        scope.scrollRepeatClippingBottom = false;
-
         updateCursor();
 
         scope.$watchCollection(rhs, function(itemArray) {
@@ -195,7 +192,6 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
           {
             updateCursor();
           }
-          updateClipping();
         };
 
         resizeHandler = function(event) {
@@ -314,23 +310,6 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
           if(c > maxC) c = maxC;
 
           setCursor(c);
-        }
-
-        function updateClipping() {
-          var newClippingTop = topItemOffset > wScrollTop;
-          var newClippingBottom = bottomItemOffset < (wScrollTop + wHeight);
-
-          if(scope.scrollRepeatClippingTop !== newClippingTop) {
-            scope.$apply(function() {
-              scope.scrollRepeatClippingTop = newClippingTop;
-            });
-          }
-
-          if(scope.scrollRepeatClippingBottom !== newClippingBottom) {
-            scope.$apply(function() {
-              scope.scrollRepeatClippingBottom = newClippingBottom;
-            });
-          }
         }
 
         function updateBodyHeight() {
