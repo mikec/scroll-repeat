@@ -2,7 +2,7 @@
 
   <div class="loading" ng-show="ctrl.loading">Loading flights...</div>
 
-  <div ng-show="!ctrl.loading" scroll-repeat="f in ctrl.flights" test="TEST" test-val="TESTVAL" class="flights">
+  <div ng-show="!ctrl.loading" scroll-repeat="f in ctrl.flights" class="flights">
     <div class="record-number">{{f.record_number | number}}</div>
     <div class="info">{{f.origin}} -> {{f.destination}} : {{f.distance}} mi.</div>
   </div>

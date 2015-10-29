@@ -40,7 +40,7 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
   var scrollEndTime = 500;
 
   var numAllowedItems = bufferAmt; // allowed on first load
-  var numColumns = 1;
+  var numColumns, numPhColumns = 1;
   var numBufferItems;
 
   var w = angular.element($window);
@@ -112,7 +112,7 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
 
       var itemTmpl = '<div class="scroll-repeat-item"></div>';
       var phTmpl = '<div class="scroll-repeat-item scroll-repeat-item-placeholder"></div>';
-      var contentTmpl = '<div class="scroll-repeat-item-content"></div>';
+      var contentTmpl = '<div class="scroll-repeat-item-content">&nbsp;</div>';
       var expression = tAttrs.scrollRepeat;
 
       var tElemChildren = tElement.children();
@@ -136,6 +136,7 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
 
       var item = angular.element(itemTmpl);
       var content = angular.element(contentTmpl);
+      content.html('');
       content.append(angular.element(itemTmplContent));
       item.append(content);
 
@@ -155,6 +156,8 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
         var itemWidth = 0;
         var numItems = 0;
         var numRows = 0;
+        var phItemHeight = 0;
+        var phItemWidth = 0;
         var baseOffsetPx = 0;
         var baseOffsetAmt = 0;
         var bodyHeight = 0;
@@ -202,8 +205,9 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
 
         function updatePlaceholderDisplays() {
           var numTopElems = phElementsTop.length;
-          var mod = numTopElems % numColumns;
-          var numHiddenTop = numTopElems - cursor;
+          var mod = numTopElems % numPhColumns;
+          var phAdjustedCursor = (cursor / numColumns) * numPhColumns;
+          var numHiddenTop = numTopElems - phAdjustedCursor;
           if(numHiddenTop < mod) numHiddenTop = mod;
           var topDiff = numHiddenTop - phHiddenTop;
           if(topDiff !== 0) {
@@ -212,15 +216,15 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
             phHiddenTop = numHiddenTop;
           }
           phTopHeight =
-            ((numTopElems - numHiddenTop) / numColumns) * itemHeight;
+            ((numTopElems - numHiddenTop) / numPhColumns) * phItemHeight;
 
-          var bottomPhRows = numRows - (offset / numColumns);
+          var bottomPhRows = numRows - ((offset / numColumns) / numPhColumns);
+
           var numHiddenBottom = phElementsBottom.length;
           if(bottomPhRows > 0) {
-            var extraItms = numItems % numColumns;
-            var numVisibleBottom = bottomPhRows * numColumns + extraItms;
+            var numVisibleBottom = bottomPhRows * numPhColumns;
             numHiddenBottom = phElementsBottom.length - numVisibleBottom;
-            if(numHiddenBottom < 0) numHiddenBottom = extraItms;
+            if(numHiddenBottom < 0) numHiddenBottom = 0;
             if(numHiddenBottom > phElementsBottom.length) {
               numHiddenBottom = phElementsBottom.length;
             }
@@ -231,9 +235,13 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
                 phHiddenBottom, bottomDiff, phDisplayVal, true);
             phHiddenBottom = numHiddenBottom;
           }
+
+          //console.log('\nPH TOP: ' + (phElementsTop.length - phHiddenTop));
+          //console.log('PH BOTTOM: ' + (phElementsBottom.length - phHiddenBottom));
+
         }
 
-        function updatePhElementDisplay(elements, prev, diff, displayVal, TST) {
+        function updatePhElementDisplay(elements, prev, diff, displayVal) {
           if(diff > 0) {
             for(var i = prev; i < prev + diff; i++) {
               elements[i].css('display', 'none');
@@ -251,6 +259,9 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
             var phElemTop = createPlaceholder();
             phElementsTop.push(phElemTop);
             element.prepend(phElemTop);
+            if(!phItemWidth || !phItemHeight) {
+              setPhCalcProps();
+            }
           }
           for(var j=0; j < phCreationChunkSize; j++) {
             var phElemBottom = createPlaceholder();
@@ -347,12 +358,24 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
         function setCalcProps() {
           itemHeight = getItemHeight();
           itemWidth = getItemWidth();
-          numColumns = getNumColumns();
+          numColumns = getNumColumns(itemWidth);
           baseOffsetPx = getBaseOffsetPx();
         }
 
-        function getNumColumns() {
-          return Math.floor(wWidth / itemWidth);
+        function setPhCalcProps() {
+          /*console.log('\nCALC PH PROPS');
+          console.log(phElementsTop[0]);
+          console.log(phElementsTop[0].html());*/
+          phItemWidth = getCalculatedProperty(phElementsTop[0], 'offsetWidth');
+          phItemHeight = getCalculatedProperty(phElementsTop[0], 'offsetHeight');
+          numPhColumns = getNumColumns(phItemWidth);
+          /*console.log('phItemWidth: ' + phItemWidth);
+          console.log('phItemHeight: ' + phItemHeight);
+          console.log('numPhColumns: ' + numPhColumns);*/
+        }
+
+        function getNumColumns(itmWidth) {
+          return Math.floor(wWidth / itmWidth);
         }
 
         function getBaseOffsetPx() {
@@ -372,6 +395,9 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
         function getCalculatedProperty(outerElem, prop) {
           var p = 0;
           if(outerElem && typeof outerElem == 'object') {
+            if(outerElem.html && outerElem[0]) { // outerElem is angular.element
+              outerElem = outerElem[0];
+            }
             var outerVal = outerElem[prop];
             var innerElem = angular.element(outerElem).children()[0];
             if(innerElem && typeof innerElem == 'object') {

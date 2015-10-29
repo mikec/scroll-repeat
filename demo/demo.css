@@ -96,6 +96,9 @@ a.nav-link.active, a.nav-link:hover {
     padding: 22px 18px;
     color: white;
 }
+.scroll-repeat-item-placeholder .scroll-repeat-item-content {
+    height: 250px;
+}
 
 .scroll-repeat-item .record-number {
     font-size: 10px;
@@ -136,6 +139,7 @@ a.nav-link.active, a.nav-link:hover {
 }
 
 .grid .scroll-repeat-item { width: 100%; }
+.grid .scroll-repeat-item.scroll-repeat-item-placeholder { width: 100%; }
 @media(min-width: 500px) {
     .grid .scroll-repeat-item { width: 50%; }
 }
