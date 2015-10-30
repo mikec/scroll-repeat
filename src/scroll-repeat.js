@@ -419,6 +419,7 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
           var itm = angular.element(phTmpl);
           var ctElem = angular.element(contentTmpl);
           if(placeholderTmplContent) {
+            ctElem.html('');
             ctElem.append(angular.element(placeholderTmplContent.clone()));
           }
           itm.append(ctElem);
