@@ -79,7 +79,7 @@ angular.module('litl.scrollRepeat', []).directive('scrollRepeat',
     }
     $timeout.cancel(scrollEnd);
     scrollEnd = $timeout(function() {
-      scrollHandler('ended');
+      if(scrollHandler) scrollHandler('ended');
     }, scrollEndTime);
     if(scrollHandler) scrollHandler();
   });
