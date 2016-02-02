@@ -142,6 +142,12 @@ module.exports = function(grunt) {
         'watch'
     ]);
 
+    grunt.registerTask('nocheck', [
+        'package',
+        'connect',
+        'watch'
+    ]);
+
     function run(cmd, msg){
         shell.exec(cmd, {silent:true});
         if( msg ){
